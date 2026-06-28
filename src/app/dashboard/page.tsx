@@ -19,7 +19,6 @@ export default function Dashboard() {
   const { lang } = useLang()
   const supabase = createClient()
   const router = useRouter()
-  const tr = t[lang]
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -28,34 +27,31 @@ export default function Dashboard() {
     })
   }, [])
 
-  async function handleSignOut() {
-    await supabase.auth.signOut()
-    router.push('/login')
-  }
-
   if (!user) return null
-  const sidebarW = collapsed ? 64 : 240
+  const sidebarW = collapsed ? 56 : 232
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
-      <Sidebar userEmail={user.email || ''} onSignOut={handleSignOut} collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div style={{ marginLeft: sidebarW + 'px', flex: 1, padding: '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-          <div style={{ marginBottom: '2rem' }}>
-            <h1 style={{ fontSize: '28px', fontWeight: '700', color: tokens.text, margin: '0 0 6px', letterSpacing: '-0.6px' }}>
+      <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <div style={{ marginLeft: sidebarW + 'px', flex: 1, transition: 'margin-left 0.2s cubic-bezier(0.4,0,0.2,1)', minHeight: '100vh' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 2.5rem' }}>
+          <div style={{ marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid ' + tokens.border }}>
+            <h1 style={{ fontSize: '20px', fontWeight: '600', color: tokens.text, margin: '0 0 3px', letterSpacing: '-0.4px' }}>
               {lang === 'ja' ? 'ダッシュボード' : lang === 'zh' ? '工作台' : 'Dashboard'}
             </h1>
-            <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
+            <p style={{ fontSize: '13px', color: tokens.textTertiary, margin: 0 }}>
               {lang === 'ja' ? '今日も頑張りましょう' : lang === 'zh' ? '今天也加油吧' : 'Track your time, get paid faster'}
             </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '1.5rem', alignItems: 'start' }}>
-            <div>
-              <UsageBanner userId={user.id} />
-          <RevenueChart userId={user.id} refresh={refresh} lang={lang} />
+
+          <UsageBanner userId={user.id} />
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem', alignItems: 'start' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <RevenueChart userId={user.id} refresh={refresh} lang={lang} />
               <TimeEntryList userId={user.id} refresh={refresh} lang={lang} />
             </div>
-            <div style={{ position: 'sticky', top: '2rem' }}>
+            <div style={{ position: 'sticky', top: '1.5rem' }}>
               <Timer userId={user.id} onSaved={() => setRefresh(r => r + 1)} lang={lang} />
             </div>
           </div>

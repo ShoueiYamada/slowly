@@ -1,3 +1,4 @@
+import './globals.css'
 import type { Metadata } from 'next'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { LangProvider } from '@/contexts/LangContext'

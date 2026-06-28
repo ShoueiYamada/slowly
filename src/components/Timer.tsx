@@ -65,73 +65,86 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
   }
 
   const selectedClient = clients.find(c => c.id === clientId)
-  const inp = { width: '100%', padding: '11px 14px', border: '1px solid ' + tokens.border, borderRadius: '12px', fontSize: '14px', boxSizing: 'border-box' as const, color: tokens.text, outline: 'none', fontFamily: 'inherit', background: tokens.bgHover }
+  const inp = {
+    width: '100%', padding: '9px 12px',
+    border: '1px solid ' + tokens.border,
+    borderRadius: '8px', fontSize: '13px',
+    boxSizing: 'border-box' as const,
+    color: tokens.text, outline: 'none',
+    fontFamily: 'inherit', background: tokens.bgHover,
+    transition: 'border-color 0.15s'
+  }
 
   return (
     <>
       {focusMode && (
-        <FocusMode
-          seconds={seconds}
-          description={description}
-          clientName={selectedClient?.name || ''}
-          running={running}
-          onExit={() => setFocusMode(false)}
-          onStop={stop}
-          lang={lang}
-        />
+        <FocusMode seconds={seconds} description={description} clientName={selectedClient?.name || ''} running={running} onExit={() => setFocusMode(false)} onStop={stop} lang={lang} />
       )}
-
-      <div style={{ background: tokens.bgCard, borderRadius: '16px', padding: '1.75rem', marginBottom: '1.25rem', border: '1px solid ' + tokens.border }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-          <div style={{ fontSize: '56px', fontWeight: '200', fontVariantNumeric: 'tabular-nums', letterSpacing: '-3px', color: running ? tokens.accent : tokens.text, lineHeight: 1 }}>
+      <div style={{ background: tokens.bgCard, borderRadius: '12px', padding: '1.25rem', border: '1px solid ' + tokens.border }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+          <div style={{ fontSize: '40px', fontWeight: '200', fontVariantNumeric: 'tabular-nums', letterSpacing: '-2px', color: running ? tokens.accent : tokens.text, lineHeight: 1, transition: 'color 0.3s' }}>
             {fmt(seconds)}
           </div>
-          <button onClick={() => setFocusMode(true)} title={lang === 'ja' ? 'フォーカスモード' : 'Focus mode'}
-            style={{ padding: '8px 14px', background: tokens.bgHover, border: '1px solid ' + tokens.border, borderRadius: '10px', cursor: 'pointer', fontSize: '12px', color: tokens.textSecondary, fontFamily: 'inherit', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            ⛶ {lang === 'ja' ? 'フォーカス' : 'Focus'}
+          <button onClick={() => setFocusMode(true)}
+            style={{ padding: '5px 10px', background: 'transparent', border: '1px solid ' + tokens.border, borderRadius: '6px', cursor: 'pointer', fontSize: '11px', color: tokens.textTertiary, fontFamily: 'inherit', fontWeight: '500', letterSpacing: '0.02em', transition: 'all 0.15s' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = tokens.accent; (e.currentTarget as HTMLElement).style.color = tokens.accent }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = tokens.border; (e.currentTarget as HTMLElement).style.color = tokens.textTertiary }}>
+            {lang === 'ja' ? 'フォーカス' : 'Focus'}
           </button>
         </div>
 
         {selectedClient && (
-          <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-            <span style={{ fontSize: '12px', background: tokens.accentBg, color: tokens.accentText, padding: '4px 12px', borderRadius: '20px', fontWeight: '600' }}>
-              {selectedClient.name} · {selectedClient.currency === 'JPY' ? '¥' : selectedClient.currency === 'EUR' ? '€' : selectedClient.currency === 'GBP' ? '£' : '$'}{selectedClient.hourly_rate}/h
+          <div style={{ marginBottom: '10px' }}>
+            <span style={{ fontSize: '11px', background: tokens.accentBg, color: tokens.accentText, padding: '3px 10px', borderRadius: '20px', fontWeight: '600', letterSpacing: '0.02em' }}>
+              {selectedClient.name}
             </span>
           </div>
         )}
 
-        <select value={clientId} onChange={e => setClientId(e.target.value)} disabled={running} style={{ ...inp, marginBottom: '10px', color: clientId ? tokens.text : tokens.textTertiary }}>
-          <option value="">{lang === 'ja' ? 'クライアントを選択（任意）' : lang === 'zh' ? '选择客户（可选）' : 'Select client (optional)'}</option>
-          {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
+          <select value={clientId} onChange={e => setClientId(e.target.value)} disabled={running} style={{ ...inp, color: clientId ? tokens.text : tokens.textTertiary }}>
+            <option value="">{lang === 'ja' ? 'クライアント（任意）' : lang === 'zh' ? '选择客户（可选）' : 'Client (optional)'}</option>
+            {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
 
-        <input type="text" placeholder={tr.placeholder} value={description} onChange={e => setDescription(e.target.value)} disabled={running}
-          style={{ ...inp, marginBottom: '10px' }} />
+          <input type="text" placeholder={tr.placeholder} value={description} onChange={e => setDescription(e.target.value)} disabled={running} style={inp} />
 
-        <div style={{ marginBottom: '12px' }}>
           <button onClick={() => setShowNotes(!showNotes)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: tokens.textTertiary, fontFamily: 'inherit', padding: '0', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: showNotes ? '8px' : '0' }}>
-            <span style={{ fontSize: '14px' }}>{showNotes ? '▾' : '▸'}</span>
-            {lang === 'ja' ? 'メモを追加' : lang === 'zh' ? '添加备注' : 'Add notes'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: tokens.textTertiary, fontFamily: 'inherit', padding: '0', display: 'flex', alignItems: 'center', gap: '4px', letterSpacing: '0.01em' }}>
+            <span style={{ fontSize: '10px' }}>{showNotes ? '▾' : '▸'}</span>
+            {lang === 'ja' ? 'メモ' : 'Notes'}
           </button>
+
           {showNotes && (
             <textarea value={notes} onChange={e => setNotes(e.target.value)}
-              placeholder={lang === 'ja' ? '作業の詳細・次回への引き継ぎなど...' : 'Work details, handover notes...'}
-              style={{ ...inp, minHeight: '80px', resize: 'vertical', lineHeight: '1.5' }} />
+              placeholder={lang === 'ja' ? '作業メモ...' : 'Work notes...'}
+              style={{ ...inp, minHeight: '72px', resize: 'vertical', lineHeight: '1.5' }} />
           )}
         </div>
 
-        {message && <p style={{ fontSize: '13px', color: tokens.success, marginBottom: '12px', textAlign: 'center' }}>{message}</p>}
-
-        {!running ? (
-          <button onClick={start} style={{ width: '100%', padding: '13px', background: tokens.accent, color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
-            {tr.startTimer}
-          </button>
-        ) : (
-          <button onClick={stop} style={{ width: '100%', padding: '13px', background: tokens.danger, color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
-            {tr.stopTimer}
-          </button>
+        {message && (
+          <p style={{ fontSize: '12px', color: message === tr.saved ? tokens.success : tokens.danger, marginBottom: '10px', letterSpacing: '0.01em' }}>
+            {message}
+          </p>
         )}
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {!running ? (
+            <button onClick={start}
+              style={{ flex: 1, padding: '10px', background: tokens.accent, color: '#080808', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '-0.1px', transition: 'opacity 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
+              {tr.startTimer}
+            </button>
+          ) : (
+            <button onClick={stop}
+              style={{ flex: 1, padding: '10px', background: tokens.danger, color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '-0.1px', transition: 'opacity 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={e => (e.currentTarget.style.opacity = '1')}>
+              {tr.stopTimer}
+            </button>
+          )}
+        </div>
       </div>
     </>
   )
