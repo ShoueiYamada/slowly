@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 export async function POST(req: NextRequest) {
@@ -33,22 +33,21 @@ export async function POST(req: NextRequest) {
         .from('profiles')
         .upsert({ id: userId, plan: 'pro' })
       console.log('Supabase update error:', error)
+      if (!error) console.log('Successfully upgraded to pro:', userId)
     }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription
     const customerId = subscription.customer as string
-    console.log('Subscription cancelled for customer:', customerId)
-
-    const customers = await stripe.customers.list({ limit: 1 })
     const customer = await stripe.customers.retrieve(customerId)
 
     if (customer && !customer.deleted && 'email' in customer && customer.email) {
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id')
-      console.log('Looking for user with email:', customer.email)
+      const { data: user } = await supabase.auth.admin.getUserByEmail(customer.email)
+      if (user?.user?.id) {
+        await supabase.from('profiles').upsert({ id: user.user.id, plan: 'free' })
+        console.log('Downgraded to free:', user.user.id)
+      }
     }
   }
 
