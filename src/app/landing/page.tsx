@@ -22,7 +22,7 @@ export default function LandingPage() {
   const css = `
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: #080808; color: #e8e8e8; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif; -webkit-font-smoothing: antialiased; }
+    body { background: #060a0f; color: #eef2ff; font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif; -webkit-font-smoothing: antialiased; }
     ::selection { background: rgba(56,189,248,0.2); }
 
     @keyframes flowLogo {
@@ -38,13 +38,13 @@ export default function LandingPage() {
       to { transform: translateY(40px); }
     }
 
-    .logo { background: linear-gradient(90deg, #1e3a5f 0%, #38BDF8 30%, #e0f2fe 55%, #38BDF8 75%, #1e3a5f 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: flowLogo 4s linear infinite; font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+    .logo { background: linear-gradient(90deg, #1e3a5f 0%, #38BDF8 30%, #e0f2fe 55%, #38BDF8 75%, #1e3a5f 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: flowLogo 4s linear infinite; font-size: 26px; font-weight: 800; letter-spacing: -1px; }
 
     .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; transition: all 0.3s; }
     .nav.scrolled { background: rgba(8,8,8,0.9); border-bottom: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(20px); }
 
     .nav-links { display: flex; align-items: center; gap: 2rem; }
-    .nav-link { background: none; border: none; color: rgba(255,255,255,0.45); font-size: 13px; cursor: pointer; font-family: inherit; transition: color 0.2s; letter-spacing: 0.01em; }
+    .nav-link { background: none; border: none; color: rgba(255,255,255,0.55); font-size: 13px; cursor: pointer; font-family: inherit; transition: color 0.2s; letter-spacing: 0.01em; }
     .nav-link:hover { color: rgba(255,255,255,0.85); }
 
     .nav-actions { display: flex; align-items: center; gap: 10px; }
@@ -57,16 +57,17 @@ export default function LandingPage() {
 
     .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 6rem; position: relative; overflow: hidden; }
 
-    .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 100%); animation: gridMove 8s linear infinite; }
-    .glow { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(56,189,248,0.06) 0%, transparent 70%); pointer-events: none; }
-    .mouse-glow { position: fixed; pointer-events: none; z-index: 0; width: 400px; height: 400px; background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%); transition: opacity 0.3s; }
+    .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(56,189,248,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(56,189,248,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 20%, transparent 100%); animation: gridMove 8s linear infinite; }
+    .glow { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(56,189,248,0.18) 0%, transparent 70%); pointer-events: none; }
+    .mouse-glow { position: fixed; pointer-events: none; z-index: 0; width: 400px; height: 400px; background: radial-gradient(circle, rgba(56,189,248,0.07) 0%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%); transition: opacity 0.3s; }
 
     .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: rgba(56,189,248,0.8); text-transform: uppercase; margin-bottom: 2rem; padding: 6px 14px; border: 1px solid rgba(56,189,248,0.15); border-radius: 100px; background: rgba(56,189,248,0.05); animation: fadeUp 0.6s ease both; }
     .eyebrow-dot { width: 5px; height: 5px; border-radius: 50%; background: #38BDF8; }
 
-    .hero-title { font-size: clamp(44px, 8vw, 84px); font-weight: 800; line-height: 1.0; letter-spacing: -3px; color: #fff; margin-bottom: 1.5rem; max-width: 820px; animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-title { font-size: clamp(44px, 8vw, 84px); font-weight: 800; line-height: 1.05; letter-spacing: -3px; color: #fff; margin-bottom: 1.5rem; max-width: 820px; animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-title-grad { background: linear-gradient(90deg, #1e3a5f 0%, #38BDF8 25%, #e0f2fe 55%, #38BDF8 75%, #7DD3FC 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: flowLogo 4s linear infinite; display: inline; }
     .hero-title span { color: rgba(255,255,255,0.25); }
-    .hero-sub { font-size: 17px; color: rgba(255,255,255,0.4); max-width: 480px; line-height: 1.7; margin-bottom: 2.5rem; font-weight: 400; animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-sub { font-size: 17px; color: rgba(255,255,255,0.55); max-width: 480px; line-height: 1.7; margin-bottom: 2.5rem; font-weight: 400; animation: fadeUp 0.6s 0.2s ease both; text-align: center; margin-left: auto; margin-right: auto; }
 
     .hero-actions { display: flex; gap: 10px; justify-content: center; margin-bottom: 4rem; animation: fadeUp 0.6s 0.3s ease both; }
     .btn-hero { background: #fff; color: #080808; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; padding: 11px 24px; border-radius: 10px; transition: all 0.2s; letter-spacing: -0.2px; }
@@ -76,22 +77,22 @@ export default function LandingPage() {
 
     .stats { display: flex; gap: 4rem; justify-content: center; animation: fadeUp 0.6s 0.4s ease both; }
     .stat-num { font-size: 36px; font-weight: 700; color: #fff; letter-spacing: -1.5px; font-variant-numeric: tabular-nums; }
-    .stat-label { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+    .stat-label { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
 
     .section { padding: 7rem 2rem; max-width: 1100px; margin: 0 auto; }
     .section-center { text-align: center; }
     .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; color: rgba(56,189,248,0.7); text-transform: uppercase; margin-bottom: 1.25rem; }
     .section-title { font-size: clamp(28px, 4vw, 46px); font-weight: 700; color: #fff; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 1rem; }
-    .section-sub { font-size: 16px; color: rgba(255,255,255,0.35); max-width: 480px; margin: 0 auto; line-height: 1.7; }
+    .section-sub { font-size: 16px; color: rgba(255,255,255,0.45); max-width: 480px; margin: 0 auto; line-height: 1.7; }
 
     .line { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); }
 
     .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; overflow: hidden; margin-top: 4rem; }
-    .feature { background: #080808; padding: 2rem; transition: background 0.2s; }
-    .feature:hover { background: #0d0d0d; }
+    .feature { background: #060a0f; padding: 2rem; transition: background 0.2s; }
+    .feature:hover { background: #0a1020; }
     .feature-num { font-size: 11px; color: rgba(255,255,255,0.15); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 1.5rem; font-variant-numeric: tabular-nums; }
     .feature-title { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px; letter-spacing: -0.3px; }
-    .feature-desc { font-size: 13px; color: rgba(255,255,255,0.35); line-height: 1.65; }
+    .feature-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; }
 
     .steps { display: flex; flex-direction: column; gap: 0; margin-top: 4rem; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; }
     .step { display: flex; gap: 2rem; padding: 2rem 2.5rem; border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
@@ -99,10 +100,10 @@ export default function LandingPage() {
     .step:hover { background: rgba(255,255,255,0.015); }
     .step-num { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.12); letter-spacing: 0.05em; flex-shrink: 0; padding-top: 3px; font-variant-numeric: tabular-nums; min-width: 24px; }
     .step-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px; letter-spacing: -0.3px; }
-    .step-desc { font-size: 14px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+    .step-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.6; }
 
     .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4rem; }
-    .pricing-card { border-radius: 16px; padding: 2.5rem; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
+    .pricing-card { border-radius: 16px; padding: 2.5rem; border: 1px solid rgba(56,189,248,0.08); background: rgba(56,189,248,0.02); }
     .pricing-card.pro { border-color: rgba(56,189,248,0.2); background: rgba(56,189,248,0.03); }
     .plan-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem; }
     .plan-name.pro { color: #38BDF8; }
@@ -119,7 +120,7 @@ export default function LandingPage() {
 
     .cta-section { padding: 8rem 2rem; text-align: center; position: relative; }
     .cta-title { font-size: clamp(36px, 5vw, 60px); font-weight: 800; color: #fff; letter-spacing: -2px; line-height: 1.05; margin-bottom: 1.25rem; }
-    .cta-sub { font-size: 16px; color: rgba(255,255,255,0.3); margin-bottom: 2.5rem; }
+    .cta-sub { font-size: 16px; color: rgba(255,255,255,0.45); margin-bottom: 2.5rem; }
 
     .footer { border-top: 1px solid rgba(255,255,255,0.05); padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; }
     .footer-text { font-size: 12px; color: rgba(255,255,255,0.18); }
@@ -128,7 +129,7 @@ export default function LandingPage() {
 
   const en = {
     eyebrow: 'Now in beta',
-    h1a: 'Track time.', h1b: 'Get paid.', h1c: 'Repeat.',
+    h1a: 'Work smarter.', h1b: 'Get paid faster.', h1c: '',
     sub: 'The minimal time tracking tool for freelancers who work globally. Log hours, generate invoices, chase payments — all in one place.',
     cta1: 'Start for free', cta2: 'View pricing',
     s1: '0', s2: '3', s3: '4+',
@@ -162,7 +163,7 @@ export default function LandingPage() {
 
   const ja = {
     eyebrow: 'ベータ版公開中',
-    h1a: '時間を記録。', h1b: '請求する。', h1c: '繰り返す。',
+    h1a: 'Work smarter.', h1b: 'Get paid faster.', h1c: '',
     sub: 'グローバルに働くフリーランサーのためのミニマルな時間管理ツール。作業記録・請求書・未払い督促をひとつに。',
     cta1: '無料で始める', cta2: '料金を見る',
     s1: '$0', s2: '3', s3: '4+',
@@ -204,14 +205,7 @@ export default function LandingPage() {
 
       <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
         <span className="logo">Flowly</span>
-        <div className="nav-links">
-          <button className="nav-link" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-            {lang === 'ja' ? '機能' : 'Features'}
-          </button>
-          <button className="nav-link" onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>
-            {lang === 'ja' ? '料金' : 'Pricing'}
-          </button>
-        </div>
+        <div />
         <div className="nav-actions">
           <div style={{ display: 'flex', gap: '4px' }}>
             <button className={`lang-btn ${lang === 'en' ? 'active' : ''}`} onClick={() => setLang('en')}>EN</button>
@@ -232,7 +226,7 @@ export default function LandingPage() {
           </div>
           <h1 className="hero-title">
             {c.h1a}<br />
-            <span>{c.h1b}</span> {c.h1c}
+            <span className="hero-title-grad">{c.h1b}</span>
           </h1>
           <p className="hero-sub">{c.sub}</p>
           <div className="hero-actions">

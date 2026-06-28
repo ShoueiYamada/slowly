@@ -3,14 +3,16 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { Theme, ThemeTokens, themes } from '@/lib/theme'
 
 type ThemeCtx = { theme: Theme; tokens: ThemeTokens; toggle: () => void }
-const ThemeContext = createContext<ThemeCtx>({ theme: 'light', tokens: themes.light, toggle: () => {} })
+const ThemeContext = createContext<ThemeCtx>({ theme: 'dark', tokens: themes.dark, toggle: () => {} })
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('dark')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('flowly-theme') as Theme
     if (saved) setTheme(saved)
+    setMounted(true)
   }, [])
 
   function toggle() {
@@ -21,7 +23,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, tokens: themes[theme], toggle }}>
-      {children}
+      <div style={{ visibility: mounted ? 'visible' : 'hidden' }}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   )
 }
