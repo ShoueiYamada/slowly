@@ -1,78 +1,95 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function CompletionEffect({ onComplete }: { onComplete: () => void }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+type Props = {
+  onComplete: () => void
+  duration: string
+}
+
+export default function CompletionEffect({ onComplete, duration }: Props) {
+  const [bgOpacity, setBgOpacity] = useState(0)
+  const [durationOpacity, setDurationOpacity] = useState(0)
+  const [completeOpacity, setCompleteOpacity] = useState(0)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    // 背景フェードイン
+    const t1 = setTimeout(() => setBgOpacity(1), 50)
+    // 時間テキストフェードイン
+    const t2 = setTimeout(() => setDurationOpacity(1), 200)
+    // 時間テキストフェードアウト（4秒後）
+    const t3 = setTimeout(() => setDurationOpacity(0), 4200)
+    // COMPLETEフェードイン（時間テキストが消え始めたら）
+    const t4 = setTimeout(() => setCompleteOpacity(1), 4600)
+    // COMPLETEフェードアウト（3秒後）
+    const t5 = setTimeout(() => setCompleteOpacity(0), 7600)
+    // 背景フェードアウト
+    const t6 = setTimeout(() => setBgOpacity(0), 7800)
+    // 完了
+    const t7 = setTimeout(() => onComplete(), 8400)
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    const particles: {
-      x: number; y: number; vx: number; vy: number;
-      size: number; color: string; alpha: number; rotation: number; vr: number
-    }[] = []
-
-    const colors = ['#38BDF8', '#7DD3FC', '#BAE6FD', '#ffffff', '#0EA5E9', '#E0F2FE']
-
-    for (let i = 0; i < 120; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: -10,
-        vx: (Math.random() - 0.5) * 6,
-        vy: Math.random() * 4 + 2,
-        size: Math.random() * 8 + 3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        alpha: 1,
-        rotation: Math.random() * Math.PI * 2,
-        vr: (Math.random() - 0.5) * 0.2,
-      })
+    return () => {
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3)
+      clearTimeout(t4); clearTimeout(t5); clearTimeout(t6); clearTimeout(t7)
     }
-
-    let frame = 0
-    let animId: number
-
-    function draw() {
-      if (!ctx || !canvas) return
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      particles.forEach(p => {
-        p.x += p.vx
-        p.y += p.vy
-        p.vy += 0.08
-        p.rotation += p.vr
-        if (frame > 60) p.alpha -= 0.015
-
-        ctx.save()
-        ctx.globalAlpha = Math.max(0, p.alpha)
-        ctx.translate(p.x, p.y)
-        ctx.rotate(p.rotation)
-        ctx.fillStyle = p.color
-        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.5)
-        ctx.restore()
-      })
-
-      frame++
-      if (frame < 120) {
-        animId = requestAnimationFrame(draw)
-      } else {
-        onComplete()
-      }
-    }
-
-    draw()
-    return () => cancelAnimationFrame(animId)
   }, [])
 
+  const css = `
+    @keyframes flowGradient {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes completePulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.75; }
+    }
+    .duration-text {
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      font-variant-numeric: tabular-nums;
+      background: linear-gradient(90deg, #1e3a5f 0%, #38BDF8 25%, #e0f2fe 55%, #38BDF8 75%, #1e3a5f 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: flowGradient 3s linear infinite;
+      position: absolute;
+      pointer-events: none;
+    }
+    .complete-text {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      background: linear-gradient(90deg, #059669 0%, #34D399 40%, #6EE7B7 60%, #34D399 80%, #059669 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: flowGradient 2s linear infinite;
+      position: absolute;
+      pointer-events: none;
+    }
+  `
+
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ position: 'fixed', inset: 0, zIndex: 9998, pointerEvents: 'none' }}
-    />
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9998,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'rgba(6,10,15,0.85)',
+      backdropFilter: 'blur(8px)',
+      opacity: bgOpacity,
+      transition: 'opacity 0.6s ease',
+      pointerEvents: 'none',
+    }}>
+      <style>{css}</style>
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '120px' }}>
+        <span className="duration-text" style={{ opacity: durationOpacity, transition: 'opacity 0.5s ease' }}>
+          {duration}
+        </span>
+        <span className="complete-text" style={{ opacity: completeOpacity, transition: 'opacity 0.5s ease' }}>
+          COMPLETE
+        </span>
+      </div>
+    </div>
   )
 }

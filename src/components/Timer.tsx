@@ -19,6 +19,7 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
   const [message, setMessage] = useState('')
   const [focusMode, setFocusMode] = useState(false)
   const [showEffect, setShowEffect] = useState(false)
+  const [completedDuration, setCompletedDuration] = useState('')
   const startedAt = useRef<Date | null>(null)
   const interval = useRef<any>(null)
   const supabase = createClient()
@@ -56,7 +57,15 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
       hourly_rate: selectedClient?.hourly_rate || 0,
     })
     if (error) setMessage(tr.saveFailed)
-    else { setShowEffect(true); setDescription(''); setNotes(''); setSeconds(0); setShowNotes(false); onSaved() }
+    else {
+      const h = Math.floor(duration / 3600)
+      const m = Math.floor((duration % 3600) / 60)
+      const s2 = duration % 60
+      const label = h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : m > 0 ? `${m}m ${String(s2).padStart(2,'0')}s` : `${s2}s`
+      setCompletedDuration(label)
+      setShowEffect(true)
+      setDescription(''); setNotes(''); setSeconds(0); setShowNotes(false); onSaved()
+    }
   }
 
   function fmt(s: number) {
@@ -79,7 +88,7 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
 
   return (
     <>
-      {showEffect && <CompletionEffect onComplete={() => { setShowEffect(false); setMessage(tr.saved) }} />}
+      {showEffect && <CompletionEffect duration={completedDuration} onComplete={() => { setShowEffect(false); setMessage(tr.saved) }} />}
       {focusMode && (
         <FocusMode seconds={seconds} description={description} clientName={selectedClient?.name || ''} running={running} onExit={() => setFocusMode(false)} onStop={stop} lang={lang} />
       )}
