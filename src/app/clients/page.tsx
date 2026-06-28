@@ -6,6 +6,8 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { useLang } from '@/contexts/LangContext'
 import { t } from '@/lib/i18n'
 import Sidebar from '@/components/Sidebar'
+import UpgradeModal from '@/components/UpgradeModal'
+import { getUsage, LIMITS } from '@/lib/plan'
 
 type Client = { id: string; name: string; email: string; hourly_rate: number; currency: string; tax_rate: number }
 
@@ -22,6 +24,8 @@ export default function ClientsPage() {
   const [taxRate, setTaxRate] = useState(0)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [showUpgrade, setShowUpgrade] = useState(false)
+  const [plan, setPlan] = useState<'free'|'pro'>('free')
   const { tokens } = useTheme()
   const { lang } = useLang()
   const supabase = createClient()
@@ -31,7 +35,7 @@ export default function ClientsPage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/login')
-      else { setUser(user); loadClients(user.id) }
+      else { setUser(user); loadClients(user.id); getUsage(user.id).then(u => setPlan(u.plan)) }
     })
   }, [])
 
@@ -40,7 +44,10 @@ export default function ClientsPage() {
     if (data) setClients(data)
   }
 
-  function openAdd() { setEditTarget(null); setName(''); setEmail(''); setHourlyRate(75); setCurrency('USD'); setTaxRate(0); setMessage(''); setShowForm(true) }
+  function openAdd() {
+    if (plan === 'free' && clients.length >= LIMITS.free.clients) { setShowUpgrade(true); return }
+    setEditTarget(null); setName(''); setEmail(''); setHourlyRate(75); setCurrency('USD'); setTaxRate(0); setMessage(''); setShowForm(true)
+  }
   function openEdit(c: Client) { setEditTarget(c); setName(c.name); setEmail(c.email || ''); setHourlyRate(c.hourly_rate); setCurrency(c.currency); setTaxRate(c.tax_rate || 0); setMessage(''); setShowForm(true) }
 
   async function saveClient() {
@@ -72,6 +79,7 @@ export default function ClientsPage() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+      {showUpgrade && <UpgradeModal reason='clients' onClose={() => setShowUpgrade(false)} />}
       <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ marginLeft: sidebarW + 'px', flex: 1, padding: '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto' }}>

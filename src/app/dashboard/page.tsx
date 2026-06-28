@@ -9,6 +9,7 @@ import Sidebar from '@/components/Sidebar'
 import Timer from '@/components/Timer'
 import TimeEntryList from '@/components/TimeEntryList'
 import RevenueChart from '@/components/RevenueChart'
+import UsageBanner from '@/components/UsageBanner'
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null)
@@ -50,7 +51,8 @@ export default function Dashboard() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '1.5rem', alignItems: 'start' }}>
             <div>
-              <RevenueChart userId={user.id} refresh={refresh} lang={lang} />
+              <UsageBanner userId={user.id} />
+          <RevenueChart userId={user.id} refresh={refresh} lang={lang} />
               <TimeEntryList userId={user.id} refresh={refresh} lang={lang} />
             </div>
             <div style={{ position: 'sticky', top: '2rem' }}>

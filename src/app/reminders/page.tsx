@@ -6,6 +6,8 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { Lang } from '@/lib/i18n'
 import { useLang } from '@/contexts/LangContext'
 import Sidebar from '@/components/Sidebar'
+import UpgradeModal from '@/components/UpgradeModal'
+import { getUsage, LIMITS, incrementReminderCount } from '@/lib/plan'
 
 type Client = { id: string; name: string; email: string; hourly_rate: number; currency: string }
 
@@ -24,6 +26,9 @@ export default function RemindersPage() {
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [copied, setCopied] = useState(false)
+  const [showUpgrade, setShowUpgrade] = useState(false)
+  const [plan, setPlan] = useState<'free'|'pro'>('free')
+  const [reminderCount, setReminderCount] = useState(0)
   const { tokens } = useTheme()
   const supabase = createClient()
   const router = useRouter()
@@ -31,7 +36,7 @@ export default function RemindersPage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/login')
-      else { setUser(user); loadClients(user.id) }
+      else { setUser(user); loadClients(user.id); getUsage(user.id).then(u => { setPlan(u.plan); setReminderCount(u.reminderCount) }) }
     })
   }, [])
 
@@ -44,6 +49,7 @@ export default function RemindersPage() {
 
   async function generate() {
     if (!selectedClientId || !amount) return
+    if (plan === 'free' && reminderCount >= LIMITS.free.remindersPerMonth) { setShowUpgrade(true); return }
     setLoading(true)
     setSubject(''); setBody('')
     try {
@@ -66,6 +72,8 @@ export default function RemindersPage() {
       if (data.error) { setBody('Error: ' + data.error); setLoading(false); return }
       setSubject(data.subject)
       setBody(data.body)
+      await incrementReminderCount(user.id)
+      setReminderCount(c => c + 1)
     } catch (e) {
       setBody('Error generating email. Please try again.')
     }
@@ -92,6 +100,7 @@ export default function RemindersPage() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+      {showUpgrade && <UpgradeModal reason='reminders' onClose={() => setShowUpgrade(false)} />}
       <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ marginLeft: sidebarW + 'px', flex: 1, padding: '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
