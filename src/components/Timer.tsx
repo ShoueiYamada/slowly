@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase'
 import { Lang, t } from '@/lib/i18n'
 import { useTheme } from '@/contexts/ThemeContext'
 import FocusMode from './FocusMode'
+import CompletionEffect from './CompletionEffect'
 
 type Client = { id: string; name: string; hourly_rate: number; currency: string }
 
@@ -17,6 +18,7 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
   const [clientId, setClientId] = useState('')
   const [message, setMessage] = useState('')
   const [focusMode, setFocusMode] = useState(false)
+  const [showEffect, setShowEffect] = useState(false)
   const startedAt = useRef<Date | null>(null)
   const interval = useRef<any>(null)
   const supabase = createClient()
@@ -54,7 +56,7 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
       hourly_rate: selectedClient?.hourly_rate || 0,
     })
     if (error) setMessage(tr.saveFailed)
-    else { setMessage(tr.saved); setDescription(''); setNotes(''); setSeconds(0); setShowNotes(false); onSaved() }
+    else { setShowEffect(true); setDescription(''); setNotes(''); setSeconds(0); setShowNotes(false); onSaved() }
   }
 
   function fmt(s: number) {
@@ -77,6 +79,7 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
 
   return (
     <>
+      {showEffect && <CompletionEffect onComplete={() => { setShowEffect(false); setMessage(tr.saved) }} />}
       {focusMode && (
         <FocusMode seconds={seconds} description={description} clientName={selectedClient?.name || ''} running={running} onExit={() => setFocusMode(false)} onStop={stop} lang={lang} />
       )}
