@@ -43,10 +43,11 @@ export async function POST(req: NextRequest) {
     const customer = await stripe.customers.retrieve(customerId)
 
     if (customer && !customer.deleted && 'email' in customer && customer.email) {
-      const { data: user } = await supabase.auth.admin.getUserByEmail(customer.email)
-      if (user?.user?.id) {
-        await supabase.from('profiles').upsert({ id: user.user.id, plan: 'free' })
-        console.log('Downgraded to free:', user.user.id)
+      const { data: { users } } = await supabase.auth.admin.listUsers()
+      const user = users.find(u => u.email === customer.email)
+      if (user?.id) {
+        await supabase.from('profiles').upsert({ id: user.id, plan: 'free' })
+        console.log('Downgraded to free:', user.id)
       }
     }
   }
