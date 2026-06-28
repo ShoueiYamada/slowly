@@ -118,7 +118,7 @@ export default function TimeEntryList({ userId, refresh, lang }: { userId: strin
                 )}
                 {entry.notes && (
                   <button onClick={() => toggleNotes(entry.id)}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', color: tokens.textTertiary, fontFamily: 'inherit', padding: '1px 6px', borderRadius: '6px', background: tokens.bgHover } as any}>
+                    style={{ border: 'none', cursor: 'pointer', fontSize: '11px', color: tokens.textTertiary, fontFamily: 'inherit', padding: '1px 6px', borderRadius: '6px', background: tokens.bgHover } as any}>
                     📝 {expandedNotes.includes(entry.id) ? (lang === 'ja' ? 'メモを隠す' : 'Hide notes') : (lang === 'ja' ? 'メモを見る' : 'Show notes')}
                   </button>
                 )}
