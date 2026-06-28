@@ -24,6 +24,7 @@ export default function Sidebar({ userEmail, onSignOut, collapsed, setCollapsed 
     { href: '/reminders', icon: '◎', label: lang === 'ja' ? 'AI督促' : lang === 'zh' ? 'AI催款' : 'AI Reminders', badge: 'AI' },
     { href: '/pomodoro', icon: '⏱', label: lang === 'ja' ? 'ポモドーロ' : lang === 'zh' ? '番茄钟' : 'Pomodoro', badge: 'NEW' },
     { href: '/goal', icon: '◉', label: lang === 'ja' ? '目標収益' : lang === 'zh' ? '收益目标' : 'Revenue Goal', badge: 'NEW' },
+    { href: '/pricing', icon: '⚡', label: lang === 'ja' ? 'プランと料金' : lang === 'zh' ? '套餐价格' : 'Pricing' },
   ]
 
   const isActive = (href: string) => pathname === href
