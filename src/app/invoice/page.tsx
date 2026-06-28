@@ -2,8 +2,11 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
+import { useTheme } from '@/contexts/ThemeContext'
 import { Lang, t } from '@/lib/i18n'
+import { useLang } from '@/contexts/LangContext'
+import Sidebar from '@/components/Sidebar'
+import dynamic from 'next/dynamic'
 
 const PDFDownloadLink = dynamic(
   () => import('@react-pdf/renderer').then(m => m.PDFDownloadLink),
@@ -11,13 +14,17 @@ const PDFDownloadLink = dynamic(
 )
 import InvoicePDF from '@/components/InvoicePDF'
 
-type Entry = { id: string; description: string; duration_seconds: number; started_at: string }
+type Entry = { id: string; description: string; duration_seconds: number; started_at: string; client_id: string | null }
+type Client = { id: string; name: string; email: string; hourly_rate: number; currency: string; tax_rate: number }
 
 export default function InvoicePage() {
   const [user, setUser] = useState<any>(null)
   const [entries, setEntries] = useState<Entry[]>([])
+  const [clients, setClients] = useState<Client[]>([])
   const [selected, setSelected] = useState<string[]>([])
-  const [lang, setLang] = useState<Lang>('en')
+  const { lang, setLang } = useLang()
+  const [collapsed, setCollapsed] = useState(false)
+  const [selectedClientId, setSelectedClientId] = useState('')
   const [fromName, setFromName] = useState('')
   const [fromEmail, setFromEmail] = useState('')
   const [toName, setToName] = useState('')
@@ -27,6 +34,7 @@ export default function InvoicePage() {
   const [taxRate, setTaxRate] = useState(0)
   const [invoiceNum, setInvoiceNum] = useState('0001')
   const [ready, setReady] = useState(false)
+  const { tokens } = useTheme()
   const supabase = createClient()
   const router = useRouter()
   const tr = t[lang]
@@ -34,13 +42,38 @@ export default function InvoicePage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/login')
-      else { setUser(user); setFromEmail(user.email || ''); loadEntries(user.id) }
+      else {
+        setUser(user)
+        setFromEmail(user.email || '')
+        loadEntries(user.id)
+        loadClients(user.id)
+      }
     })
   }, [])
 
   async function loadEntries(uid: string) {
     const { data } = await supabase.from('time_entries').select('*').eq('user_id', uid).order('started_at', { ascending: false })
     if (data) setEntries(data)
+  }
+
+  async function loadClients(uid: string) {
+    const { data } = await supabase.from('clients').select('*').eq('user_id', uid)
+    if (data) setClients(data)
+  }
+
+  function handleClientSelect(clientId: string) {
+    setSelectedClientId(clientId)
+    setReady(false)
+    if (!clientId) return
+    const c = clients.find(c => c.id === clientId)
+    if (!c) return
+    setToName(c.name)
+    setToEmail(c.email || '')
+    setHourlyRate(c.hourly_rate)
+    setCurrency(c.currency)
+    setTaxRate(c.tax_rate || 0)
+    const clientEntries = entries.filter(e => e.client_id === clientId)
+    if (clientEntries.length > 0) setSelected(clientEntries.map(e => e.id))
   }
 
   function toggleSelect(id: string) {
@@ -61,116 +94,153 @@ export default function InvoicePage() {
   function fmtH(s: number) { const h = Math.floor(s / 3600); const m = Math.floor((s % 3600) / 60); return `${h}h ${String(m).padStart(2, '0')}m` }
   function fmtDate(iso: string) { const d = new Date(iso); return `${d.getMonth() + 1}/${d.getDate()}` }
 
-  const input = { width: '100%', padding: '10px 14px', border: '1px solid #d2d2d7', borderRadius: '10px', fontSize: '14px', boxSizing: 'border-box' as const, color: '#1d1d1f', outline: 'none', background: '#fff' }
-  const label = { display: 'block' as const, fontSize: '12px', color: '#6e6e73', marginBottom: '6px', fontWeight: '500' as const }
+  const inp = { width: '100%', padding: '11px 14px', border: '1px solid ' + tokens.border, borderRadius: '12px', fontSize: '14px', boxSizing: 'border-box' as const, color: tokens.text, outline: 'none', fontFamily: 'inherit', background: tokens.bgHover }
+  const lbl = { display: 'block' as const, fontSize: '12px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '500' as const }
+
+  if (!user) return null
+  const sidebarW = collapsed ? 64 : 240
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f7', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif' }}>
-      <div style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '0.5px solid #d2d2d7', position: 'sticky', top: 0, zIndex: 10 }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '52px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <button onClick={() => router.push('/dashboard')}
-              style={{ background: 'none', border: 'none', color: '#0071e3', cursor: 'pointer', fontSize: '14px', padding: 0 }}>
-              {tr.back}
-            </button>
-            <span style={{ color: '#d2d2d7' }}>|</span>
-            <span style={{ fontSize: '15px', fontWeight: '600', color: '#1d1d1f' }}>{tr.createInvoice}</span>
+    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+      <Sidebar userEmail={user.email || ''} lang={lang} setLang={setLang} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <div style={{ marginLeft: sidebarW + 'px', flex: 1, padding: '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: '28px', fontWeight: '700', color: tokens.text, margin: '0 0 6px', letterSpacing: '-0.6px' }}>
+              {tr.createInvoice}
+            </h1>
+            <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
+              {lang === 'ja' ? '作業ログから請求書を自動生成' : lang === 'zh' ? '从工作记录自动生成发票' : 'Auto-generate invoices from your time logs'}
+            </p>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {(['en', 'ja', 'zh'] as Lang[]).map(l => (
-              <button key={l} onClick={() => setLang(l)}
-                style={{ padding: '4px 12px', borderRadius: '20px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '500', background: lang === l ? '#1d1d1f' : '#e8e8ed', color: lang === l ? '#fff' : '#6e6e73' }}>
-                {l === 'en' ? 'EN' : l === 'ja' ? '日本語' : '中文'}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
 
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem', display: 'grid', gridTemplateColumns: '1fr 380px', gap: '1.5rem', alignItems: 'start' }}>
-        <div>
-          <div style={{ background: '#fff', borderRadius: '18px', padding: '2rem', marginBottom: '1.5rem', border: '0.5px solid #d2d2d7' }}>
-            <h2 style={{ fontSize: '17px', fontWeight: '600', color: '#1d1d1f', marginBottom: '1.25rem' }}>{tr.basicInfo}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
-              <div><label style={label}>{tr.invoiceNum}</label><input style={input} value={invoiceNum} onChange={e => { setInvoiceNum(e.target.value); setReady(false) }} /></div>
-              <div><label style={label}>{tr.currency}</label>
-                <select style={input} value={currency} onChange={e => { setCurrency(e.target.value); setReady(false) }}>
-                  <option value="USD">USD ($)</option>
-                  <option value="JPY">JPY (¥)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="GBP">GBP (£)</option>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '1.5rem', alignItems: 'start' }}>
+            <div>
+              <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border, marginBottom: '1.25rem' }}>
+                <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '1.25rem' }}>
+                  {lang === 'ja' ? 'クライアントを選択' : lang === 'zh' ? '选择客户' : 'Select Client'}
+                </h2>
+                <select style={{ ...inp, marginBottom: '0' }} value={selectedClientId} onChange={e => handleClientSelect(e.target.value)}>
+                  <option value="">{lang === 'ja' ? 'クライアントを選ぶと自動入力されます' : lang === 'zh' ? '选择客户后自动填写' : 'Choose a client to auto-fill details'}</option>
+                  {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
+                {selectedClientId && (
+                  <div style={{ marginTop: '12px', padding: '12px 14px', background: tokens.accentBg, borderRadius: '10px', display: 'flex', gap: '16px' }}>
+                    <div style={{ fontSize: '13px', color: tokens.accentText }}><span style={{ opacity: 0.7 }}>Rate: </span><strong>{symbol}{hourlyRate}/h</strong></div>
+                    <div style={{ fontSize: '13px', color: tokens.accentText }}><span style={{ opacity: 0.7 }}>Tax: </span><strong>{taxRate}%</strong></div>
+                    <div style={{ fontSize: '13px', color: tokens.accentText }}><span style={{ opacity: 0.7 }}>Currency: </span><strong>{currency}</strong></div>
+                  </div>
+                )}
               </div>
-              <div><label style={label}>{tr.hourlyRate}</label><input style={input} type="number" value={hourlyRate} onChange={e => { setHourlyRate(Number(e.target.value)); setReady(false) }} /></div>
-              <div><label style={label}>{tr.taxRate}</label><input style={input} type="number" value={taxRate} onChange={e => { setTaxRate(Number(e.target.value)); setReady(false) }} /></div>
-            </div>
-            <div style={{ height: '0.5px', background: '#f0f0f5', margin: '1.25rem 0' }} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-              <div><label style={label}>{tr.yourName}</label><input style={input} value={fromName} onChange={e => { setFromName(e.target.value); setReady(false) }} placeholder={tr.namePlaceholder} /></div>
-              <div><label style={label}>{tr.yourEmail}</label><input style={input} value={fromEmail} onChange={e => { setFromEmail(e.target.value); setReady(false) }} /></div>
-              <div><label style={label}>{tr.clientName}</label><input style={input} value={toName} onChange={e => { setToName(e.target.value); setReady(false) }} placeholder={tr.clientPlaceholder} /></div>
-              <div><label style={label}>{tr.clientEmail}</label><input style={input} value={toEmail} onChange={e => { setToEmail(e.target.value); setReady(false) }} /></div>
-            </div>
-          </div>
 
-          <div style={{ background: '#fff', borderRadius: '18px', padding: '2rem', border: '0.5px solid #d2d2d7' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h2 style={{ fontSize: '17px', fontWeight: '600', color: '#1d1d1f', margin: 0 }}>{tr.selectEntries}</h2>
-              <button onClick={selectAll}
-                style={{ fontSize: '13px', padding: '6px 14px', background: '#f5f5f7', border: 'none', borderRadius: '20px', cursor: 'pointer', color: '#1d1d1f', fontWeight: '500' }}>
-                {tr.selectAll}
-              </button>
-            </div>
-            {entries.length === 0 ? (
-              <p style={{ color: '#6e6e73', fontSize: '14px', textAlign: 'center', padding: '2rem 0' }}>{tr.noEntries}</p>
-            ) : entries.map(entry => (
-              <div key={entry.id} onClick={() => toggleSelect(entry.id)}
-                style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '12px 14px', borderRadius: '12px', cursor: 'pointer', background: selected.includes(entry.id) ? '#f0f7ff' : 'transparent', marginBottom: '4px', transition: 'background 0.15s' }}>
-                <div style={{ width: '20px', height: '20px', borderRadius: '6px', border: `1.5px solid ${selected.includes(entry.id) ? '#0071e3' : '#d2d2d7'}`, background: selected.includes(entry.id) ? '#0071e3' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  {selected.includes(entry.id) && <span style={{ color: '#fff', fontSize: '13px', lineHeight: 1 }}>✓</span>}
+              <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border, marginBottom: '1.25rem' }}>
+                <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '1.25rem' }}>{tr.basicInfo}</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                  <div><label style={lbl}>{tr.invoiceNum}</label><input style={inp} value={invoiceNum} onChange={e => { setInvoiceNum(e.target.value); setReady(false) }} /></div>
+                  <div><label style={lbl}>{tr.currency}</label>
+                    <select style={inp} value={currency} onChange={e => { setCurrency(e.target.value); setReady(false) }}>
+                      <option value="USD">USD ($)</option><option value="JPY">JPY (¥)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option>
+                    </select>
+                  </div>
+                  <div><label style={lbl}>{tr.hourlyRate}</label><input style={inp} type="number" value={hourlyRate} onChange={e => { setHourlyRate(Number(e.target.value)); setReady(false) }} /></div>
+                  <div><label style={lbl}>{tr.taxRate}</label><input style={inp} type="text" inputMode="decimal" value={taxRate === 0 ? '' : taxRate} onChange={e => { setTaxRate(e.target.value === '' ? 0 : Number(e.target.value)); setReady(false) }} placeholder="0" /></div>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '14px', fontWeight: '500', color: '#1d1d1f' }}>{entry.description}</div>
-                  <div style={{ fontSize: '12px', color: '#6e6e73', marginTop: '2px' }}>{fmtDate(entry.started_at)} · {fmtH(entry.duration_seconds)}</div>
+                <div style={{ height: '1px', background: tokens.border, margin: '1.25rem 0' }} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div><label style={lbl}>{tr.yourName}</label><input style={inp} value={fromName} onChange={e => { setFromName(e.target.value); setReady(false) }} placeholder={tr.namePlaceholder} /></div>
+                  <div><label style={lbl}>{tr.yourEmail}</label><input style={inp} value={fromEmail} onChange={e => { setFromEmail(e.target.value); setReady(false) }} /></div>
+                  <div><label style={lbl}>{tr.clientName}</label><input style={inp} value={toName} onChange={e => { setToName(e.target.value); setReady(false) }} placeholder={tr.clientPlaceholder} /></div>
+                  <div><label style={lbl}>{tr.clientEmail}</label><input style={inp} value={toEmail} onChange={e => { setToEmail(e.target.value); setReady(false) }} /></div>
                 </div>
-                <div style={{ fontSize: '14px', color: '#1d1d1f', fontWeight: '500' }}>{symbol}{Math.round((entry.duration_seconds / 3600) * hourlyRate).toLocaleString()}</div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        <div style={{ position: 'sticky', top: '68px' }}>
-          <div style={{ background: '#fff', borderRadius: '18px', padding: '1.75rem', border: '0.5px solid #d2d2d7', marginBottom: '1rem' }}>
-            <h2 style={{ fontSize: '17px', fontWeight: '600', color: '#1d1d1f', marginBottom: '1.25rem' }}>{tr.totalSection}</h2>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#6e6e73', marginBottom: '8px' }}>
-              <span>{tr.totalHours}</span><span style={{ color: '#1d1d1f' }}>{fmtH(totalSeconds)}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#6e6e73', marginBottom: '8px' }}>
-              <span>{tr.subtotal}</span><span style={{ color: '#1d1d1f' }}>{symbol}{Math.round(subtotal).toLocaleString()}</span>
-            </div>
-            {taxRate > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#6e6e73', marginBottom: '8px' }}>
-                <span>{tr.tax} ({taxRate}%)</span><span style={{ color: '#1d1d1f' }}>{symbol}{Math.round(tax).toLocaleString()}</span>
+              <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                  <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, margin: 0 }}>{tr.selectEntries}</h2>
+                  <button onClick={selectAll}
+                    style={{ fontSize: '13px', padding: '6px 14px', background: tokens.bgHover, border: 'none', borderRadius: '20px', cursor: 'pointer', color: tokens.textSecondary, fontWeight: '500', fontFamily: 'inherit' }}>
+                    {tr.selectAll}
+                  </button>
+                </div>
+                {entries.length === 0 ? (
+                  <p style={{ color: tokens.textTertiary, fontSize: '14px', textAlign: 'center', padding: '2rem 0' }}>{tr.noEntries}</p>
+                ) : entries.map(entry => (
+                  <div key={entry.id} onClick={() => toggleSelect(entry.id)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '11px 14px', borderRadius: '12px', cursor: 'pointer', background: selected.includes(entry.id) ? tokens.bgActive : 'transparent', marginBottom: '4px' }}>
+                    <div style={{ width: '20px', height: '20px', borderRadius: '6px', border: '1.5px solid ' + (selected.includes(entry.id) ? tokens.accent : tokens.border), background: selected.includes(entry.id) ? tokens.accent : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {selected.includes(entry.id) && <span style={{ color: '#fff', fontSize: '12px', lineHeight: 1 }}>✓</span>}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: '14px', fontWeight: '500', color: tokens.text }}>{entry.description}</div>
+                      <div style={{ fontSize: '12px', color: tokens.textTertiary, marginTop: '2px' }}>
+                        {fmtDate(entry.started_at)} · {fmtH(entry.duration_seconds)}
+                        {entry.client_id && clients.find(c => c.id === entry.client_id) && (
+                          <span style={{ marginLeft: '8px', background: tokens.accentBg, color: tokens.accentText, padding: '1px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: '600' }}>
+                            {clients.find(c => c.id === entry.client_id)?.name}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '14px', color: tokens.text, fontWeight: '500' }}>
+                      {symbol}{Math.round((entry.duration_seconds / 3600) * hourlyRate).toLocaleString()}
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
-            <div style={{ height: '0.5px', background: '#d2d2d7', margin: '14px 0' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '20px', fontWeight: '700', color: '#1d1d1f' }}>
-              <span>{tr.total}</span><span>{symbol}{Math.round(total).toLocaleString()}</span>
+            </div>
+
+            <div style={{ position: 'sticky', top: '2rem' }}>
+              <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border, marginBottom: '1rem' }}>
+                <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '1.25rem' }}>{tr.totalSection}</h2>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: tokens.textSecondary, marginBottom: '8px' }}>
+                  <span>{tr.totalHours}</span><span style={{ color: tokens.text }}>{fmtH(totalSeconds)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: tokens.textSecondary, marginBottom: '8px' }}>
+                  <span>{tr.subtotal}</span><span style={{ color: tokens.text }}>{symbol}{Math.round(subtotal).toLocaleString()}</span>
+                </div>
+                {taxRate > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: tokens.textSecondary, marginBottom: '8px' }}>
+                    <span>{tr.tax} ({taxRate}%)</span><span style={{ color: tokens.text }}>{symbol}{Math.round(tax).toLocaleString()}</span>
+                  </div>
+                )}
+                <div style={{ height: '1px', background: tokens.border, margin: '14px 0' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '22px', fontWeight: '700', color: tokens.text }}>
+                  <span style={{ fontSize: '15px', fontWeight: '500', color: tokens.textSecondary, alignSelf: 'center' }}>{tr.total}</span>
+                  <span style={{ color: tokens.accent }}>{symbol}{Math.round(total).toLocaleString()}</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {(['en', 'ja', 'zh'] as Lang[]).length > 0 && (
+                  <div style={{ background: tokens.bgCard, borderRadius: '14px', padding: '1rem 1.25rem', border: '1px solid ' + tokens.border }}>
+                    <p style={{ fontSize: '11px', color: tokens.textTertiary, marginBottom: '8px', fontWeight: '600', letterSpacing: '0.05em' }}>PDF LANGUAGE</p>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {(['en', 'ja', 'zh'] as Lang[]).map(l => (
+                        <button key={l} onClick={() => setLang(l)}
+                          style={{ flex: 1, padding: '7px 0', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', fontFamily: 'inherit', background: lang === l ? tokens.accent : tokens.bgHover, color: lang === l ? '#fff' : tokens.textSecondary }}>
+                          {l === 'en' ? 'EN' : l === 'ja' ? 'JA' : 'ZH'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <button onClick={() => setReady(true)} disabled={selected.length === 0}
+                  style={{ width: '100%', padding: '14px', background: selected.length === 0 ? tokens.textTertiary : tokens.text, color: tokens.bg, border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '700', cursor: selected.length === 0 ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
+                  {tr.preparePDF}
+                </button>
+
+                {ready && (
+                  <PDFDownloadLink
+                    document={<InvoicePDF invoiceNum={invoiceNum} fromName={fromName} fromEmail={fromEmail} toName={toName} toEmail={toEmail} entries={selectedEntries} hourlyRate={hourlyRate} currency={currency} taxRate={taxRate} lang={lang} />}
+                    fileName={'invoice-' + invoiceNum + '.pdf'}
+                    style={{ display: 'block', width: '100%', padding: '14px', background: tokens.accent, color: '#fff', borderRadius: '12px', fontSize: '15px', fontWeight: '700', cursor: 'pointer', textAlign: 'center', textDecoration: 'none', boxSizing: 'border-box' }}>
+                    {({ loading }) => loading ? tr.generating : tr.downloadPDF}
+                  </PDFDownloadLink>
+                )}
+              </div>
             </div>
           </div>
-
-          <button onClick={() => setReady(true)} disabled={selected.length === 0}
-            style={{ width: '100%', padding: '14px', background: selected.length === 0 ? '#d2d2d7' : '#1d1d1f', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '600', cursor: selected.length === 0 ? 'not-allowed' : 'pointer', marginBottom: '10px' }}>
-            {tr.preparePDF}
-          </button>
-          {ready && (
-            <PDFDownloadLink
-              document={<InvoicePDF invoiceNum={invoiceNum} fromName={fromName} fromEmail={fromEmail} toName={toName} toEmail={toEmail} entries={selectedEntries} hourlyRate={hourlyRate} currency={currency} taxRate={taxRate} lang={lang} />}
-              fileName={`invoice-${invoiceNum}.pdf`}
-              style={{ display: 'block', width: '100%', padding: '14px', background: '#0071e3', color: '#fff', borderRadius: '12px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', textAlign: 'center', textDecoration: 'none', boxSizing: 'border-box' }}>
-              {({ loading }) => loading ? tr.generating : tr.downloadPDF}
-            </PDFDownloadLink>
-          )}
         </div>
       </div>
     </div>

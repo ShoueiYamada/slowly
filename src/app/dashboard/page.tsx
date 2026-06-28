@@ -2,14 +2,20 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { useTheme } from '@/contexts/ThemeContext'
+import { useLang } from '@/contexts/LangContext'
+import { t } from '@/lib/i18n'
+import Sidebar from '@/components/Sidebar'
 import Timer from '@/components/Timer'
 import TimeEntryList from '@/components/TimeEntryList'
-import { Lang, t } from '@/lib/i18n'
+import RevenueChart from '@/components/RevenueChart'
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null)
   const [refresh, setRefresh] = useState(0)
-  const [lang, setLang] = useState<Lang>('en')
+  const [collapsed, setCollapsed] = useState(false)
+  const { tokens } = useTheme()
+  const { lang } = useLang()
   const supabase = createClient()
   const router = useRouter()
   const tr = t[lang]
@@ -27,35 +33,31 @@ export default function Dashboard() {
   }
 
   if (!user) return null
+  const sidebarW = collapsed ? 64 : 240
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f7', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif' }}>
-      <div style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '0.5px solid #d2d2d7', position: 'sticky', top: 0, zIndex: 10 }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '52px' }}>
-          <span style={{ fontSize: '17px', fontWeight: '700', color: '#1d1d1f', letterSpacing: '-0.3px' }}>Flowly</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'flex', gap: '6px' }}>
-              {(['en', 'ja', 'zh'] as Lang[]).map(l => (
-                <button key={l} onClick={() => setLang(l)}
-                  style={{ padding: '4px 12px', borderRadius: '20px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '500', background: lang === l ? '#1d1d1f' : '#e8e8ed', color: lang === l ? '#fff' : '#6e6e73' }}>
-                  {l === 'en' ? 'EN' : l === 'ja' ? '日本語' : '中文'}
-                </button>
-              ))}
+    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+      <Sidebar userEmail={user.email || ''} onSignOut={handleSignOut} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <div style={{ marginLeft: sidebarW + 'px', flex: 1, padding: '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: '28px', fontWeight: '700', color: tokens.text, margin: '0 0 6px', letterSpacing: '-0.6px' }}>
+              {lang === 'ja' ? 'ダッシュボード' : lang === 'zh' ? '工作台' : 'Dashboard'}
+            </h1>
+            <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
+              {lang === 'ja' ? '今日も頑張りましょう' : lang === 'zh' ? '今天也加油吧' : 'Track your time, get paid faster'}
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '1.5rem', alignItems: 'start' }}>
+            <div>
+              <RevenueChart userId={user.id} refresh={refresh} lang={lang} />
+              <TimeEntryList userId={user.id} refresh={refresh} lang={lang} />
             </div>
-            <button onClick={() => router.push('/invoice')}
-              style={{ padding: '7px 16px', background: '#0071e3', color: '#fff', border: 'none', borderRadius: '20px', cursor: 'pointer', fontSize: '13px', fontWeight: '500' }}>
-              {tr.createInvoice}
-            </button>
-            <button onClick={handleSignOut}
-              style={{ padding: '7px 16px', background: 'none', border: '0.5px solid #d2d2d7', borderRadius: '20px', cursor: 'pointer', fontSize: '13px', color: '#6e6e73' }}>
-              {tr.logout}
-            </button>
+            <div style={{ position: 'sticky', top: '2rem' }}>
+              <Timer userId={user.id} onSaved={() => setRefresh(r => r + 1)} lang={lang} />
+            </div>
           </div>
         </div>
-      </div>
-      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '2.5rem 2rem' }}>
-        <Timer userId={user.id} onSaved={() => setRefresh(r => r + 1)} lang={lang} />
-        <TimeEntryList userId={user.id} refresh={refresh} lang={lang} />
       </div>
     </div>
   )

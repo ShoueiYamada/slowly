@@ -1,0 +1,148 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import { useTheme } from '@/contexts/ThemeContext'
+import { useLang } from '@/contexts/LangContext'
+import { t } from '@/lib/i18n'
+import Sidebar from '@/components/Sidebar'
+
+type Client = { id: string; name: string; email: string; hourly_rate: number; currency: string; tax_rate: number }
+
+export default function ClientsPage() {
+  const [user, setUser] = useState<any>(null)
+  const [clients, setClients] = useState<Client[]>([])
+  const [collapsed, setCollapsed] = useState(false)
+  const [showForm, setShowForm] = useState(false)
+  const [editTarget, setEditTarget] = useState<Client | null>(null)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [hourlyRate, setHourlyRate] = useState(75)
+  const [currency, setCurrency] = useState('USD')
+  const [taxRate, setTaxRate] = useState(0)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState('')
+  const { tokens } = useTheme()
+  const { lang } = useLang()
+  const supabase = createClient()
+  const router = useRouter()
+  const tr = t[lang]
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) router.push('/login')
+      else { setUser(user); loadClients(user.id) }
+    })
+  }, [])
+
+  async function loadClients(uid: string) {
+    const { data } = await supabase.from('clients').select('*').eq('user_id', uid).order('created_at', { ascending: false })
+    if (data) setClients(data)
+  }
+
+  function openAdd() { setEditTarget(null); setName(''); setEmail(''); setHourlyRate(75); setCurrency('USD'); setTaxRate(0); setMessage(''); setShowForm(true) }
+  function openEdit(c: Client) { setEditTarget(c); setName(c.name); setEmail(c.email || ''); setHourlyRate(c.hourly_rate); setCurrency(c.currency); setTaxRate(c.tax_rate || 0); setMessage(''); setShowForm(true) }
+
+  async function saveClient() {
+    if (!name.trim()) { setMessage(lang === 'ja' ? '名前を入力してください' : 'Please enter a name'); return }
+    setSaving(true)
+    const payload = { name, email, hourly_rate: hourlyRate, currency, tax_rate: taxRate }
+    if (editTarget) {
+      const { error } = await supabase.from('clients').update(payload).eq('id', editTarget.id)
+      if (!error) { setShowForm(false); loadClients(user.id) } else setMessage(error.message)
+    } else {
+      const { error } = await supabase.from('clients').insert({ ...payload, user_id: user.id })
+      if (!error) { setShowForm(false); loadClients(user.id) } else setMessage(error.message)
+    }
+    setSaving(false)
+  }
+
+  async function deleteClient(id: string) {
+    if (!window.confirm(lang === 'ja' ? '削除しますか？' : 'Delete this client?')) return
+    await supabase.from('clients').delete().eq('id', id)
+    loadClients(user.id)
+  }
+
+  const symbol = (c: string) => c === 'JPY' ? '¥' : c === 'EUR' ? '€' : c === 'GBP' ? '£' : '$'
+  const inp = { width: '100%', padding: '11px 14px', border: '1px solid ' + tokens.border, borderRadius: '10px', fontSize: '15px', boxSizing: 'border-box' as const, color: tokens.text, outline: 'none', fontFamily: 'inherit', background: tokens.bgHover }
+  const lbl = { display: 'block' as const, fontSize: '13px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '500' as const }
+
+  if (!user) return null
+  const sidebarW = collapsed ? 64 : 240
+
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+      <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <div style={{ marginLeft: sidebarW + 'px', flex: 1, padding: '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+            <div>
+              <h1 style={{ fontSize: '28px', fontWeight: '700', color: tokens.text, margin: '0 0 6px', letterSpacing: '-0.6px' }}>
+                {lang === 'ja' ? 'クライアント' : lang === 'zh' ? '客户管理' : 'Clients'}
+              </h1>
+              <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
+                {lang === 'ja' ? clients.length + '件のクライアント' : clients.length + ' client' + (clients.length !== 1 ? 's' : '')}
+              </p>
+            </div>
+            <button onClick={openAdd} style={{ padding: '11px 22px', background: tokens.accent, color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '15px', fontWeight: '600', fontFamily: 'inherit' }}>
+              {lang === 'ja' ? '+ 追加' : lang === 'zh' ? '+ 添加' : '+ Add Client'}
+            </button>
+          </div>
+
+          {showForm && (
+            <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '2rem', border: '1px solid ' + tokens.borderStrong, marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: '600', color: tokens.text, marginBottom: '1.5rem' }}>
+                {editTarget ? (lang === 'ja' ? '編集' : 'Edit Client') : (lang === 'ja' ? '新規クライアント' : 'New Client')}
+              </h2>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                <div style={{ gridColumn: '1 / -1' }}><label style={lbl}>{lang === 'ja' ? 'クライアント名' : 'Client Name'}</label><input style={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Acme Corp" /></div>
+                <div style={{ gridColumn: '1 / -1' }}><label style={lbl}>{lang === 'ja' ? 'メール' : 'Email'}</label><input style={inp} value={email} onChange={e => setEmail(e.target.value)} placeholder="billing@acme.com" /></div>
+                <div><label style={lbl}>{tr.hourlyRate}</label><input style={inp} type="number" value={hourlyRate} onChange={e => setHourlyRate(Number(e.target.value))} /></div>
+                <div><label style={lbl}>{tr.currency}</label>
+                  <select style={inp} value={currency} onChange={e => setCurrency(e.target.value)}>
+                    <option value="USD">USD ($)</option><option value="JPY">JPY (¥)</option><option value="EUR">EUR (€)</option><option value="GBP">GBP (£)</option>
+                  </select>
+                </div>
+                <div><label style={lbl}>{tr.taxRate}</label><input style={inp} type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} placeholder="0" /></div>
+              </div>
+              {message && <p style={{ fontSize: '14px', color: tokens.danger, marginBottom: '14px' }}>{message}</p>}
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button onClick={saveClient} disabled={saving} style={{ flex: 1, padding: '12px', background: saving ? tokens.textTertiary : tokens.accent, color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '600', cursor: 'pointer', fontFamily: 'inherit' }}>
+                  {saving ? '...' : lang === 'ja' ? '保存' : 'Save'}
+                </button>
+                <button onClick={() => setShowForm(false)} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid ' + tokens.border, borderRadius: '12px', fontSize: '15px', cursor: 'pointer', color: tokens.textSecondary, fontFamily: 'inherit' }}>
+                  {lang === 'ja' ? 'キャンセル' : 'Cancel'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div style={{ background: tokens.bgCard, borderRadius: '18px', border: '1px solid ' + tokens.border, overflow: 'hidden' }}>
+            {clients.length === 0 ? (
+              <div style={{ padding: '5rem', textAlign: 'center' }}>
+                <p style={{ color: tokens.textTertiary, fontSize: '16px', marginBottom: '1.5rem' }}>{lang === 'ja' ? 'クライアントがまだいません' : 'No clients yet'}</p>
+                <button onClick={openAdd} style={{ padding: '12px 24px', background: tokens.accent, color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '15px', fontWeight: '600' }}>
+                  {lang === 'ja' ? '+ 最初のクライアントを追加' : '+ Add your first client'}
+                </button>
+              </div>
+            ) : clients.map((c, i) => (
+              <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '1.25rem 1.75rem', borderBottom: i < clients.length - 1 ? '1px solid ' + tokens.border : 'none' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: tokens.accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', fontWeight: '700', color: tokens.accent, flexShrink: 0 }}>
+                  {c.name.charAt(0).toUpperCase()}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '3px' }}>{c.name}</div>
+                  <div style={{ fontSize: '13px', color: tokens.textTertiary }}>{c.email || '—'} · {symbol(c.currency)}{c.hourly_rate}/h · Tax {c.tax_rate || 0}%</div>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button onClick={() => openEdit(c)} style={{ padding: '8px 18px', background: tokens.bgHover, border: 'none', borderRadius: '20px', cursor: 'pointer', fontSize: '13px', fontWeight: '500', color: tokens.textSecondary, fontFamily: 'inherit' }}>{lang === 'ja' ? '編集' : 'Edit'}</button>
+                  <button onClick={() => deleteClient(c.id)} style={{ padding: '8px 18px', background: tokens.dangerBg, border: 'none', borderRadius: '20px', cursor: 'pointer', fontSize: '13px', fontWeight: '500', color: tokens.danger, fontFamily: 'inherit' }}>{lang === 'ja' ? '削除' : 'Delete'}</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

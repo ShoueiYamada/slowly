@@ -1,116 +1,175 @@
 'use client'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { createClient } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
-import { Lang, t } from '@/lib/i18n'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function LoginPage() {
+type Lang = 'en' | 'ja'
+
+function LoginContent() {
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [isSignUp, setIsSignUp] = useState(false)
+  const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [lang, setLang] = useState<Lang>('en')
   const router = useRouter()
   const supabase = createClient()
-  const tr = t[lang]
+
+  const copy = {
+    en: {
+      signin: 'Welcome back', signup: 'Create account',
+      sub_signin: 'Sign in to your Flowly account',
+      sub_signup: 'Start tracking time and getting paid faster',
+      email: 'Email address', password: 'Password',
+      btn_signin: 'Sign in', btn_signup: 'Create account',
+      loading: 'Processing...',
+      switch_to_signup: "Don't have an account?", switch_signup_link: 'Sign up',
+      switch_to_signin: 'Already have an account?', switch_signin_link: 'Sign in',
+      confirm: 'Confirmation email sent. Please check your inbox.',
+      back: '← Back to home',
+    },
+    ja: {
+      signin: 'おかえりなさい', signup: 'アカウントを作成',
+      sub_signin: 'Flowlyにログイン',
+      sub_signup: '無料で始めて、素早く入金を受けましょう',
+      email: 'メールアドレス', password: 'パスワード',
+      btn_signin: 'ログイン', btn_signup: 'アカウントを作成',
+      loading: '処理中...',
+      switch_to_signup: 'アカウントをお持ちでない方は', switch_signup_link: '新規登録',
+      switch_to_signin: 'すでにアカウントをお持ちの方は', switch_signin_link: 'ログイン',
+      confirm: '確認メールを送りました。メールを確認してください。',
+      back: '← ホームに戻る',
+    },
+  }
+  const c = copy[lang]
 
   async function handleSubmit() {
-    setLoading(true)
-    setMessage('')
+    setLoading(true); setMessage('')
     if (isSignUp) {
       const { error } = await supabase.auth.signUp({ email, password })
       if (error) setMessage(error.message)
-      else setMessage(lang === 'ja' ? '確認メールを送りました。メールを確認してください。' : lang === 'zh' ? '确认邮件已发送，请查收邮件。' : 'Confirmation email sent. Please check your inbox.')
+      else setMessage(c.confirm)
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setMessage(error.message)
-      else router.push('/')
+      else router.push('/dashboard')
     }
     setLoading(false)
   }
 
-  const input = {
-    width: '100%', padding: '12px 16px', border: '1px solid #d2d2d7',
-    borderRadius: '12px', fontSize: '15px', boxSizing: 'border-box' as const,
-    color: '#1d1d1f', outline: 'none', fontFamily: 'inherit', background: '#fff'
-  }
+  const isSuccess = message === c.confirm
+
+  const animStyle = `
+    @keyframes flowGradient {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .logo-anim {
+      background: linear-gradient(90deg, #1e3a5f 0%, #38BDF8 25%, #e0f2fe 50%, #38BDF8 75%, #1e3a5f 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: flowGradient 3s linear infinite;
+    }
+    .inp:focus { border-color: #38BDF8 !important; outline: none; }
+    .lang-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #94A3B8;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: rgba(56,189,248,0.15);
+      border-color: rgba(56,189,248,0.4);
+      color: #38BDF8;
+    }
+  `
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f7', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '0.5px solid #d2d2d7' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '52px' }}>
-          <span style={{ fontSize: '17px', fontWeight: '700', color: '#1d1d1f', letterSpacing: '-0.3px' }}>Flowly</span>
-          <div style={{ display: 'flex', gap: '6px' }}>
-            {(['en', 'ja', 'zh'] as Lang[]).map(l => (
-              <button key={l} onClick={() => setLang(l)}
-                style={{ padding: '4px 12px', borderRadius: '20px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '500', background: lang === l ? '#1d1d1f' : '#e8e8ed', color: lang === l ? '#fff' : '#6e6e73' }}>
-                {l === 'en' ? 'EN' : l === 'ja' ? '日本語' : '中文'}
-              </button>
-            ))}
-          </div>
+    <div style={{ minHeight: '100vh', background: '#08080F', fontFamily: '-apple-system, BlinkMacSystemFont, "Inter", sans-serif', display: 'flex', flexDirection: 'column' }}>
+      <style>{animStyle}</style>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <button onClick={() => router.push('/landing')}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <span className="logo-anim" style={{ fontSize: '18px', fontWeight: '800', letterSpacing: '-0.5px' }}>Flowly</span>
+        </button>
+        <div style={{ display: 'flex', gap: '6px' }}>
+          <button className={'lang-btn' + (lang === 'en' ? ' active' : '')} onClick={() => setLang('en')}>EN</button>
+          <button className={'lang-btn' + (lang === 'ja' ? ' active' : '')} onClick={() => setLang('ja')}>JA</button>
         </div>
       </div>
 
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
         <div style={{ width: '100%', maxWidth: '400px' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <div style={{ width: '56px', height: '56px', background: '#1d1d1f', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', fontSize: '24px' }}>
-              ⏱
-            </div>
-            <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#1d1d1f', margin: '0 0 6px', letterSpacing: '-0.5px' }}>Flowly</h1>
-            <p style={{ fontSize: '15px', color: '#6e6e73', margin: 0 }}>
-              {isSignUp
-                ? (lang === 'ja' ? 'アカウントを作成' : lang === 'zh' ? '创建账户' : 'Create your account')
-                : (lang === 'ja' ? 'ログイン' : lang === 'zh' ? '登录账户' : 'Sign in to your account')}
-            </p>
+            <span className="logo-anim" style={{ fontSize: '42px', fontWeight: '800', letterSpacing: '-1.5px', display: 'block', marginBottom: '1rem' }}>Flowly</span>
+            <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#F1F5F9', margin: '0 0 6px', letterSpacing: '-0.5px' }}>
+              {isSignUp ? c.signup : c.signin}
+            </h1>
+            <p style={{ fontSize: '14px', color: '#64748B', margin: 0 }}>{isSignUp ? c.sub_signup : c.sub_signin}</p>
           </div>
 
-          <div style={{ background: '#fff', borderRadius: '18px', padding: '2rem', border: '0.5px solid #d2d2d7' }}>
+          <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '18px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{ marginBottom: '14px' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: '#6e6e73', marginBottom: '6px', fontWeight: '500' }}>
-                {lang === 'ja' ? 'メールアドレス' : lang === 'zh' ? '邮箱地址' : 'Email address'}
-              </label>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748B', marginBottom: '6px', fontWeight: '600' }}>{c.email}</label>
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                placeholder="you@example.com" style={input} />
+                placeholder="you@example.com"
+                className="inp"
+                style={{ width: '100%', padding: '12px 16px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '15px', boxSizing: 'border-box', color: '#F1F5F9', background: 'rgba(255,255,255,0.05)', fontFamily: 'inherit' }} />
             </div>
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '12px', color: '#6e6e73', marginBottom: '6px', fontWeight: '500' }}>
-                {lang === 'ja' ? 'パスワード' : lang === 'zh' ? '密码' : 'Password'}
-              </label>
+              <label style={{ display: 'block', fontSize: '12px', color: '#64748B', marginBottom: '6px', fontWeight: '600' }}>{c.password}</label>
               <input type="password" value={password} onChange={e => setPassword(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-                placeholder="••••••••" style={input} />
+                placeholder="••••••••"
+                className="inp"
+                style={{ width: '100%', padding: '12px 16px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '15px', boxSizing: 'border-box', color: '#F1F5F9', background: 'rgba(255,255,255,0.05)', fontFamily: 'inherit' }} />
             </div>
             {message && (
-              <div style={{ background: message.includes('sent') || message.includes('送り') || message.includes('已发') ? '#f0fff4' : '#fff0f0', borderRadius: '10px', padding: '10px 14px', marginBottom: '1rem' }}>
-                <p style={{ fontSize: '13px', color: message.includes('sent') || message.includes('送り') || message.includes('已发') ? '#34c759' : '#ff3b30', margin: 0 }}>{message}</p>
+              <div style={{ background: isSuccess ? 'rgba(56,189,248,0.1)' : 'rgba(239,68,68,0.1)', borderRadius: '10px', padding: '10px 14px', marginBottom: '1rem', border: '1px solid ' + (isSuccess ? 'rgba(56,189,248,0.2)' : 'rgba(239,68,68,0.2)') }}>
+                <p style={{ fontSize: '13px', color: isSuccess ? '#38BDF8' : '#F87171', margin: 0 }}>{message}</p>
               </div>
             )}
             <button onClick={handleSubmit} disabled={loading}
-              style={{ width: '100%', padding: '13px', background: loading ? '#6e6e73' : '#1d1d1f', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '600', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit' }}>
-              {loading
-                ? (lang === 'ja' ? '処理中...' : lang === 'zh' ? '处理中...' : 'Processing...')
-                : isSignUp
-                  ? (lang === 'ja' ? 'アカウントを作成' : lang === 'zh' ? '创建账户' : 'Create account')
-                  : (lang === 'ja' ? 'ログイン' : lang === 'zh' ? '登录' : 'Sign in')}
+              style={{ width: '100%', padding: '13px', background: loading ? '#1e3a5f' : '#38BDF8', color: loading ? '#64748B' : '#08080F', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '700', cursor: loading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
+              {loading ? c.loading : isSignUp ? c.btn_signup : c.btn_signin}
             </button>
           </div>
 
-          <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '14px', color: '#6e6e73' }}>
-            {isSignUp
-              ? (lang === 'ja' ? 'すでにアカウントをお持ちの方は' : lang === 'zh' ? '已有账户？' : 'Already have an account? ')
-              : (lang === 'ja' ? 'アカウントをお持ちでない方は' : lang === 'zh' ? '还没有账户？' : "Don't have an account? ")}
+          <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '14px', color: '#475569' }}>
+            {isSignUp ? c.switch_to_signup : c.switch_to_signin}{' '}
             <button onClick={() => { setIsSignUp(!isSignUp); setMessage('') }}
-              style={{ background: 'none', border: 'none', color: '#0071e3', cursor: 'pointer', fontSize: '14px', fontWeight: '500', fontFamily: 'inherit' }}>
-              {isSignUp
-                ? (lang === 'ja' ? 'ログイン' : lang === 'zh' ? '立即登录' : 'Sign in')
-                : (lang === 'ja' ? '新規登録' : lang === 'zh' ? '立即注册' : 'Sign up')}
+              style={{ background: 'none', border: 'none', color: '#38BDF8', cursor: 'pointer', fontSize: '14px', fontWeight: '600', fontFamily: 'inherit' }}>
+              {isSignUp ? c.switch_signin_link : c.switch_signup_link}
+            </button>
+          </p>
+
+          <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <button onClick={() => router.push('/landing')}
+              style={{ background: 'none', border: 'none', color: '#334155', cursor: 'pointer', fontSize: '13px', fontFamily: 'inherit' }}>
+              {c.back}
             </button>
           </p>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   )
 }
