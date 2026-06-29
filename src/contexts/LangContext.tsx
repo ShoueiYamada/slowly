@@ -6,7 +6,7 @@ type LangCtx = { lang: Lang; setLang: (l: Lang) => void }
 const LangContext = createContext<LangCtx>({ lang: 'en', setLang: () => {} })
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('en')
+  const [lang, setLangState] = useState<Lang>('ja')
 
   useEffect(() => {
     const saved = localStorage.getItem('flowly-lang') as Lang

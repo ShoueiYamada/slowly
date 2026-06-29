@@ -215,11 +215,11 @@ export default function InvoicePage() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                {(['en', 'ja', 'zh'] as Lang[]).length > 0 && (
+                {(['en', 'ja'] as Lang[]).length > 0 && (
                   <div style={{ background: tokens.bgCard, borderRadius: '14px', padding: '1rem 1.25rem', border: '1px solid ' + tokens.border }}>
                     <p style={{ fontSize: '11px', color: tokens.textTertiary, marginBottom: '8px', fontWeight: '600', letterSpacing: '0.05em' }}>PDF LANGUAGE</p>
                     <div style={{ display: 'flex', gap: '6px' }}>
-                      {(['en', 'ja', 'zh'] as Lang[]).map(l => (
+                      {(['en', 'ja'] as Lang[]).map(l => (
                         <button key={l} onClick={() => setLang(l)}
                           style={{ flex: 1, padding: '7px 0', borderRadius: '8px', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: '600', fontFamily: 'inherit', background: lang === l ? tokens.accent : tokens.bgHover, color: lang === l ? '#fff' : tokens.textSecondary }}>
                           {l === 'en' ? 'EN' : l === 'ja' ? 'JA' : 'ZH'}

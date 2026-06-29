@@ -109,7 +109,7 @@ export default function Sidebar({ userEmail, onSignOut, collapsed, setCollapsed 
         <div style={{ marginBottom: '8px' }}>
           <div style={{ fontSize: '10px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '600', letterSpacing: '0.08em', paddingLeft: '4px' }}>LANGUAGE</div>
           <div style={{ display: 'flex', gap: '3px' }}>
-            {(['en', 'ja', 'zh'] as Lang[]).map(l => (
+            {(['en', 'ja'] as Lang[]).map(l => (
               <button key={l} onClick={() => setLang(l)}
                 style={{ flex: 1, padding: '6px 0', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: '600', fontFamily: 'inherit', background: lang === l ? tokens.accent : tokens.bgHover, color: lang === l ? '#080808' : tokens.textTertiary }}>
                 {l === 'en' ? 'EN' : l === 'ja' ? 'JA' : 'ZH'}

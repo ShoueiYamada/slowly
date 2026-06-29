@@ -10,7 +10,7 @@ type Client = { id: string; name: string; hourly_rate: number; currency: string 
 
 export default function FocusPage() {
   const [user, setUser] = useState<any>(null)
-  const [lang, setLang] = useState<Lang>('en')
+  const [lang, setLang] = useState<Lang>('ja')
   const [collapsed, setCollapsed] = useState(false)
   const [clients, setClients] = useState<Client[]>([])
   const [clientId, setClientId] = useState('')
