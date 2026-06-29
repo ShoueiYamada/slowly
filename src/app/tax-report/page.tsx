@@ -15,7 +15,7 @@ export default function TaxReportPage() {
   const [isMobile, setIsMobile] = useState(false)
   const [entries, setEntries] = useState<Entry[]>([])
   const [clients, setClients] = useState<Client[]>([])
-  const [rates, setRates] = useState<Record<string, number>>({ USD: 150, EUR: 163, GBP: 190 })
+  const [rates, setRates] = useState<Record<string, number>>({ USD: 150, EUR: 163, GBP: 190, JPY: 1 })
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [loading, setLoading] = useState(true)
   const { tokens } = useTheme()
@@ -60,7 +60,11 @@ export default function TaxReportPage() {
 
   function toJPY(amount: number, currency: string) {
     if (currency === 'JPY') return amount
-    return amount * (rates[currency] || 150)
+    const rate = rates[currency]
+    if (!rate) return amount * 150
+    // ratesはUSDベースなので変換
+    const usdAmount = currency === 'USD' ? amount : amount / (rates[currency] || 1)
+    return usdAmount * rates['JPY']
   }
 
   // 年でフィルタ
