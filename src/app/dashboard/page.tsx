@@ -11,6 +11,7 @@ import TimeEntryList from '@/components/TimeEntryList'
 import RevenueChart from '@/components/RevenueChart'
 import UsageBanner from '@/components/UsageBanner'
 import ExchangeRates from '@/components/ExchangeRates'
+import NetRevenueCard from '@/components/NetRevenueCard'
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null)
@@ -51,6 +52,7 @@ export default function Dashboard() {
 
           <UsageBanner userId={user.id} />
           <ExchangeRates />
+          <NetRevenueCard userId={user.id} refresh={refresh} />
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem', alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

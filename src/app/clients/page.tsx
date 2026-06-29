@@ -23,6 +23,9 @@ export default function ClientsPage() {
   const [hourlyRate, setHourlyRate] = useState(75)
   const [currency, setCurrency] = useState('USD')
   const [taxRate, setTaxRate] = useState(0)
+  const [transferMethod, setTransferMethod] = useState('wise')
+  const [transferFeePercent, setTransferFeePercent] = useState(0.69)
+  const [transferFeeFixed, setTransferFeeFixed] = useState(0)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [showUpgrade, setShowUpgrade] = useState(false)
@@ -49,14 +52,14 @@ export default function ClientsPage() {
 
   function openAdd() {
     if (plan === 'free' && clients.length >= LIMITS.free.clients) { setShowUpgrade(true); return }
-    setEditTarget(null); setName(''); setEmail(''); setHourlyRate(75); setCurrency('USD'); setTaxRate(0); setMessage(''); setShowForm(true)
+    setEditTarget(null); setName(''); setEmail(''); setHourlyRate(75); setCurrency('USD'); setTaxRate(0); setTransferMethod('wise'); setTransferFeePercent(0.69); setTransferFeeFixed(0); setMessage(''); setShowForm(true)
   }
-  function openEdit(c: Client) { setEditTarget(c); setName(c.name); setEmail(c.email || ''); setHourlyRate(c.hourly_rate); setCurrency(c.currency); setTaxRate(c.tax_rate || 0); setMessage(''); setShowForm(true) }
+  function openEdit(c: Client) { setEditTarget(c); setName(c.name); setEmail(c.email || ''); setHourlyRate(c.hourly_rate); setCurrency(c.currency); setTaxRate(c.tax_rate || 0); setTransferMethod((c as any).transfer_method || 'wise'); setTransferFeePercent((c as any).transfer_fee_percent || 0.69); setTransferFeeFixed((c as any).transfer_fee_fixed || 0); setMessage(''); setShowForm(true) }
 
   async function saveClient() {
     if (!name.trim()) { setMessage(lang === 'ja' ? '名前を入力してください' : 'Please enter a name'); return }
     setSaving(true)
-    const payload = { name, email, hourly_rate: hourlyRate, currency, tax_rate: taxRate }
+    const payload = { name, email, hourly_rate: hourlyRate, currency, tax_rate: taxRate, transfer_method: transferMethod, transfer_fee_percent: transferFeePercent, transfer_fee_fixed: transferFeeFixed }
     if (editTarget) {
       const { error } = await supabase.from('clients').update(payload).eq('id', editTarget.id)
       if (!error) { setShowForm(false); loadClients(user.id) } else setMessage(error.message)
@@ -116,6 +119,34 @@ export default function ClientsPage() {
                   </select>
                 </div>
                 <div><label style={lbl}>{tr.taxRate}</label><input style={inp} type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} placeholder="0" /></div>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={lbl}>{lang === 'ja' ? '送金方法' : 'Transfer Method'}</label>
+                  <select style={inp} value={transferMethod} onChange={e => {
+                    const m = e.target.value
+                    setTransferMethod(m)
+                    if (m === 'wise') { setTransferFeePercent(0.69); setTransferFeeFixed(0) }
+                    else if (m === 'paypal') { setTransferFeePercent(3.5); setTransferFeeFixed(0) }
+                    else if (m === 'bank') { setTransferFeePercent(0); setTransferFeeFixed(25) }
+                    else { setTransferFeePercent(0); setTransferFeeFixed(0) }
+                  }}>
+                    <option value="wise">Wise（約0.69%）</option>
+                    <option value="paypal">PayPal（約3.5%）</option>
+                    <option value="bank">{lang === 'ja' ? '銀行送金（固定$25）' : 'Bank Transfer ($25 fixed)'}</option>
+                    <option value="custom">{lang === 'ja' ? 'カスタム' : 'Custom'}</option>
+                  </select>
+                </div>
+                {transferMethod === 'custom' && (
+                  <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
+                      <label style={lbl}>{lang === 'ja' ? '手数料率（%）' : 'Fee (%)'}</label>
+                      <input style={inp} type="number" step="0.01" value={transferFeePercent} onChange={e => setTransferFeePercent(Number(e.target.value))} placeholder="0.69" />
+                    </div>
+                    <div>
+                      <label style={lbl}>{lang === 'ja' ? '固定手数料（USD）' : 'Fixed Fee (USD)'}</label>
+                      <input style={inp} type="number" step="0.01" value={transferFeeFixed} onChange={e => setTransferFeeFixed(Number(e.target.value))} placeholder="0" />
+                    </div>
+                  </div>
+                )}
               </div>
               {message && <p style={{ fontSize: '14px', color: tokens.danger, marginBottom: '14px' }}>{message}</p>}
               <div style={{ display: 'flex', gap: '12px' }}>
