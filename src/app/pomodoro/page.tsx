@@ -12,6 +12,7 @@ type Client = { id: string; name: string; hourly_rate: number; currency: string 
 export default function PomodoroPage() {
   const [user, setUser] = useState<any>(null)
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [clients, setClients] = useState<Client[]>([])
   const [clientId, setClientId] = useState('')
   const [description, setDescription] = useState('')
@@ -32,6 +33,8 @@ export default function PomodoroPage() {
   const { lang } = useLang()
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -134,14 +137,8 @@ export default function PomodoroPage() {
     }
   `
 
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+
   if (!user) return null
 
   return (

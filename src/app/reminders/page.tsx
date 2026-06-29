@@ -16,6 +16,7 @@ export default function RemindersPage() {
   const [clients, setClients] = useState<Client[]>([])
   const { lang, setLang } = useLang()
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [selectedClientId, setSelectedClientId] = useState('')
   const [invoiceNum, setInvoiceNum] = useState('')
   const [amount, setAmount] = useState('')
@@ -32,6 +33,8 @@ export default function RemindersPage() {
   const { tokens } = useTheme()
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -95,14 +98,8 @@ export default function RemindersPage() {
     { key: 'strong', label: lang === 'ja' ? '強め' : lang === 'zh' ? '强硬' : 'Strong', desc: lang === 'ja' ? '最終警告に' : 'Final warning' },
   ]
 
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+
   if (!user) return null
 
   return (

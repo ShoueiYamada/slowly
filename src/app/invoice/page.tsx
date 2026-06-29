@@ -24,6 +24,7 @@ export default function InvoicePage() {
   const [selected, setSelected] = useState<string[]>([])
   const { lang, setLang } = useLang()
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [selectedClientId, setSelectedClientId] = useState('')
   const [fromName, setFromName] = useState('')
   const [fromEmail, setFromEmail] = useState('')
@@ -38,6 +39,8 @@ export default function InvoicePage() {
   const supabase = createClient()
   const router = useRouter()
   const tr = t[lang]
+
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -97,14 +100,8 @@ export default function InvoicePage() {
   const inp = { width: '100%', padding: '11px 14px', border: '1px solid ' + tokens.border, borderRadius: '12px', fontSize: '14px', boxSizing: 'border-box' as const, color: tokens.text, outline: 'none', fontFamily: 'inherit', background: tokens.bgHover }
   const lbl = { display: 'block' as const, fontSize: '12px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '500' as const }
 
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+
   if (!user) return null
 
   return (

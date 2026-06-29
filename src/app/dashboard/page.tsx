@@ -15,10 +15,13 @@ export default function Dashboard() {
   const [user, setUser] = useState<any>(null)
   const [refresh, setRefresh] = useState(0)
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const { tokens } = useTheme()
   const { lang } = useLang()
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -27,10 +30,9 @@ export default function Dashboard() {
     })
   }, [])
 
-  if (!user) return null
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+
+  if (!user) return null
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>

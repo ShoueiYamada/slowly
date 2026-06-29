@@ -15,6 +15,7 @@ export default function ClientsPage() {
   const [user, setUser] = useState<any>(null)
   const [clients, setClients] = useState<Client[]>([])
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [editTarget, setEditTarget] = useState<Client | null>(null)
   const [name, setName] = useState('')
@@ -31,6 +32,8 @@ export default function ClientsPage() {
   const supabase = createClient()
   const router = useRouter()
   const tr = t[lang]
+
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -74,14 +77,8 @@ export default function ClientsPage() {
   const inp = { width: '100%', padding: '11px 14px', border: '1px solid ' + tokens.border, borderRadius: '10px', fontSize: '15px', boxSizing: 'border-box' as const, color: tokens.text, outline: 'none', fontFamily: 'inherit', background: tokens.bgHover }
   const lbl = { display: 'block' as const, fontSize: '13px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '500' as const }
 
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+
   if (!user) return null
 
   return (

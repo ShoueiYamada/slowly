@@ -9,12 +9,15 @@ import Sidebar from '@/components/Sidebar'
 export default function PricingPage() {
   const [user, setUser] = useState<any>(null)
   const [collapsed, setCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState<'free' | 'pro'>('free')
   const { tokens } = useTheme()
   const { lang } = useLang()
   const supabase = createClient()
   const router = useRouter()
+
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -51,14 +54,8 @@ export default function PricingPage() {
     ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', 'PDFロゴなし', '優先サポート', '月次レポート（近日公開）']
     : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without Flowly logo', 'Priority support', 'Monthly reports (coming soon)']
 
-  const [isMobile, setIsMobile] = useState(false)
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768)
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+
   if (!user) return null
 
   return (
