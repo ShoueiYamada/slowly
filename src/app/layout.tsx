@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import { LangProvider } from '@/contexts/LangContext'
 
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <LangProvider>{children}</LangProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
