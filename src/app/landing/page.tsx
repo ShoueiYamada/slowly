@@ -287,48 +287,6 @@ export default function LandingPage() {
       <div className="line" />
 
 
-      <section style={{ padding: '6rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
-        <div className="section-center" style={{ marginBottom: '3rem' }}>
-          <div className="section-label">Why Flowly</div>
-          <h2 className="section-title">Built for Japanese freelancers.<br />Not for teams.</h2>
-        </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-            <thead>
-              <tr>
-                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'rgba(255,255,255,0.4)', fontWeight: '600', fontSize: '12px', letterSpacing: '0.06em', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>FEATURE</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', color: '#38BDF8', fontWeight: '700', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Flowly</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: '600', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Toggl</th>
-                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: '600', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Harvest</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { feature: 'Tax report for Japan', flowly: true, toggl: false, harvest: false },
-                { feature: 'Auto currency conversion', flowly: true, toggl: false, harvest: '△' },
-                { feature: 'AI payment reminders', flowly: true, toggl: false, harvest: false },
-                { feature: 'Japanese UI', flowly: true, toggl: false, harvest: false },
-                { feature: 'PDF invoice generation', flowly: true, toggl: false, harvest: true },
-                { feature: 'Free plan available', flowly: true, toggl: true, harvest: false },
-                { feature: 'Price', flowly: '$19/mo', toggl: '$9+/mo', harvest: '$12+/mo' },
-              ].map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.7)' }}>{row.feature}</td>
-                  <td style={{ padding: '14px 16px', textAlign: 'center', color: '#38BDF8', fontWeight: '600' }}>
-                    {typeof row.flowly === 'boolean' ? (row.flowly ? '✓' : '✗') : row.flowly}
-                  </td>
-                  <td style={{ padding: '14px 16px', textAlign: 'center', color: typeof row.toggl === 'boolean' ? (row.toggl ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)') : 'rgba(255,255,255,0.4)' }}>
-                    {typeof row.toggl === 'boolean' ? (row.toggl ? '✓' : '✗') : row.toggl}
-                  </td>
-                  <td style={{ padding: '14px 16px', textAlign: 'center', color: typeof row.harvest === 'boolean' ? (row.harvest ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)') : 'rgba(255,255,255,0.4)' }}>
-                    {typeof row.harvest === 'boolean' ? (row.harvest ? '✓' : '✗') : row.harvest}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
 
       <div className="divider" />
       {lang === 'en' && null}
