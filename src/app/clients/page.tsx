@@ -93,14 +93,14 @@ export default function ClientsPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
             <div>
               <h1 style={{ fontSize: '28px', fontWeight: '700', color: tokens.text, margin: '0 0 6px', letterSpacing: '-0.6px' }}>
-                {lang === 'ja' ? 'クライアント' : lang === 'zh' ? '客户管理' : 'Clients'}
+                {lang === 'ja' ? 'クライアント'  : 'Clients'}
               </h1>
               <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
                 {lang === 'ja' ? clients.length + '件のクライアント' : clients.length + ' client' + (clients.length !== 1 ? 's' : '')}
               </p>
             </div>
             <button onClick={openAdd} style={{ padding: '11px 22px', background: tokens.accent, color: '#fff', border: 'none', borderRadius: '12px', cursor: 'pointer', fontSize: '15px', fontWeight: '600', fontFamily: 'inherit' }}>
-              {lang === 'ja' ? '+ 追加' : lang === 'zh' ? '+ 添加' : '+ Add Client'}
+              {lang === 'ja' ? '+ 追加'  : '+ Add Client'}
             </button>
           </div>
 

@@ -93,9 +93,9 @@ export default function RemindersPage() {
   const lbl = { display: 'block' as const, fontSize: '12px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '600' as const, letterSpacing: '0.03em' }
 
   const tones = [
-    { key: 'soft', label: lang === 'ja' ? 'やわらかめ' : lang === 'zh' ? '温和' : 'Gentle', desc: lang === 'ja' ? '初回の督促に' : 'First reminder' },
-    { key: 'firm', label: lang === 'ja' ? '毅然と' : lang === 'zh' ? '坚定' : 'Firm', desc: lang === 'ja' ? '2回目以降に' : 'Second reminder' },
-    { key: 'strong', label: lang === 'ja' ? '強め' : lang === 'zh' ? '强硬' : 'Strong', desc: lang === 'ja' ? '最終警告に' : 'Final warning' },
+    { key: 'soft', label: lang === 'ja' ? 'やわらかめ'  : 'Gentle', desc: lang === 'ja' ? '初回の督促に' : 'First reminder' },
+    { key: 'firm', label: lang === 'ja' ? '毅然と'  : 'Firm', desc: lang === 'ja' ? '2回目以降に' : 'Second reminder' },
+    { key: 'strong', label: lang === 'ja' ? '強め'  : 'Strong', desc: lang === 'ja' ? '最終警告に' : 'Final warning' },
   ]
 
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
@@ -110,10 +110,10 @@ export default function RemindersPage() {
         <div style={{ maxWidth: '900px', margin: '0 auto' }}>
           <div style={{ marginBottom: '2rem' }}>
             <h1 style={{ fontSize: '28px', fontWeight: '700', color: tokens.text, margin: '0 0 6px', letterSpacing: '-0.6px' }}>
-              {lang === 'ja' ? 'AI督促メール' : lang === 'zh' ? 'AI催款邮件' : 'AI Payment Reminder'}
+              {lang === 'ja' ? 'AI督促メール'  : 'AI Payment Reminder'}
             </h1>
             <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
-              {lang === 'ja' ? '未払いクライアントへの督促メールをAIが自動生成します' : lang === 'zh' ? 'AI自动生成催款邮件' : 'Let AI draft the awkward email for you'}
+              {lang === 'ja' ? '未払いクライアントへの督促メールをAIが自動生成します'  : 'Let AI draft the awkward email for you'}
             </p>
           </div>
 
@@ -121,7 +121,7 @@ export default function RemindersPage() {
             <div>
               <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border, marginBottom: '1.25rem' }}>
                 <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '1.25rem' }}>
-                  {lang === 'ja' ? '送信者情報' : lang === 'zh' ? '发件人信息' : 'Your Info'}
+                  {lang === 'ja' ? '送信者情報'  : 'Your Info'}
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div>
@@ -137,7 +137,7 @@ export default function RemindersPage() {
 
               <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border, marginBottom: '1.25rem' }}>
                 <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '1.25rem' }}>
-                  {lang === 'ja' ? '請求情報' : lang === 'zh' ? '账单信息' : 'Invoice Details'}
+                  {lang === 'ja' ? '請求情報'  : 'Invoice Details'}
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   <div>

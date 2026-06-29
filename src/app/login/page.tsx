@@ -12,7 +12,7 @@ function LoginContent() {
   const [isSignUp, setIsSignUp] = useState(searchParams.get('mode') === 'signup')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [lang, setLang] = useState<Lang>('en')
+  const [lang, setLang] = useState<Lang>('ja')
   const router = useRouter()
   const supabase = createClient()
 

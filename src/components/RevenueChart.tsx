@@ -104,7 +104,7 @@ export default function RevenueChart({ userId, refresh, lang }: { userId: string
       <div style={{ height: '160px' }}>
         {entries.length === 0 ? (
           <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <p style={{ color: tokens.textTertiary, fontSize: '13px' }}>{lang === 'ja' ? 'データなし' : lang === 'zh' ? '暂无数据' : 'No data yet'}</p>
+            <p style={{ color: tokens.textTertiary, fontSize: '13px' }}>{lang === 'ja' ? 'データなし'  : 'No data yet'}</p>
           </div>
         ) : <Bar data={chartData} options={options as any} />}
       </div>

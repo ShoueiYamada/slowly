@@ -43,10 +43,10 @@ export default function Dashboard() {
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: isMobile ? '4.5rem 1rem 1rem' : '2rem 2.5rem' }}>
           <div style={{ marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid ' + tokens.border }}>
             <h1 style={{ fontSize: '20px', fontWeight: '600', color: tokens.text, margin: '0 0 3px', letterSpacing: '-0.4px' }}>
-              {lang === 'ja' ? 'ダッシュボード' : lang === 'zh' ? '工作台' : 'Dashboard'}
+              {lang === 'ja' ? 'ダッシュボード'  : 'Dashboard'}
             </h1>
             <p style={{ fontSize: '13px', color: tokens.textTertiary, margin: 0 }}>
-              {lang === 'ja' ? '今日も頑張りましょう' : lang === 'zh' ? '今天也加油吧' : 'Track your time, get paid faster'}
+              {lang === 'ja' ? '今日も頑張りましょう'  : 'Track your time, get paid faster'}
             </p>
           </div>
 

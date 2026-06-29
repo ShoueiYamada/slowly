@@ -115,7 +115,7 @@ export default function Timer({ userId, onSaved, lang }: { userId: string, onSav
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
           <select value={clientId} onChange={e => setClientId(e.target.value)} disabled={running} style={{ ...inp, color: clientId ? tokens.text : tokens.textTertiary }}>
-            <option value="">{lang === 'ja' ? 'クライアント（任意）' : lang === 'zh' ? '选择客户（可选）' : 'Client (optional)'}</option>
+            <option value="">{lang === 'ja' ? 'クライアント（任意）'  : 'Client (optional)'}</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
 

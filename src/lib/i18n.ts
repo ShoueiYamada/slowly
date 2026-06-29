@@ -1,4 +1,4 @@
-export type Lang = 'en' | 'ja' | 'zh'
+export type Lang = 'en' | 'ja'
 
 export const t: Record<Lang, Record<string, string>> = {
   en: {

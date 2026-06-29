@@ -114,7 +114,7 @@ export default function InvoicePage() {
               {tr.createInvoice}
             </h1>
             <p style={{ fontSize: '15px', color: tokens.textSecondary, margin: 0 }}>
-              {lang === 'ja' ? '作業ログから請求書を自動生成' : lang === 'zh' ? '从工作记录自动生成发票' : 'Auto-generate invoices from your time logs'}
+              {lang === 'ja' ? '作業ログから請求書を自動生成'  : 'Auto-generate invoices from your time logs'}
             </p>
           </div>
 
@@ -122,10 +122,10 @@ export default function InvoicePage() {
             <div>
               <div style={{ background: tokens.bgCard, borderRadius: '18px', padding: '1.75rem', border: '1px solid ' + tokens.border, marginBottom: '1.25rem' }}>
                 <h2 style={{ fontSize: '16px', fontWeight: '600', color: tokens.text, marginBottom: '1.25rem' }}>
-                  {lang === 'ja' ? 'クライアントを選択' : lang === 'zh' ? '选择客户' : 'Select Client'}
+                  {lang === 'ja' ? 'クライアントを選択'  : 'Select Client'}
                 </h2>
                 <select style={{ ...inp, marginBottom: '0' }} value={selectedClientId} onChange={e => handleClientSelect(e.target.value)}>
-                  <option value="">{lang === 'ja' ? 'クライアントを選ぶと自動入力されます' : lang === 'zh' ? '选择客户后自动填写' : 'Choose a client to auto-fill details'}</option>
+                  <option value="">{lang === 'ja' ? 'クライアントを選ぶと自動入力されます'  : 'Choose a client to auto-fill details'}</option>
                   {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
                 {selectedClientId && (

@@ -10,7 +10,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem('flowly-lang') as Lang
-    if (saved && ['en', 'ja', 'zh'].includes(saved)) setLangState(saved)
+    if (saved && ['en', 'ja'].includes(saved)) setLangState(saved)
   }, [])
 
   function setLang(l: Lang) {

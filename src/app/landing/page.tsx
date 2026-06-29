@@ -7,7 +7,7 @@ type Lang = 'en' | 'ja'
 export default function LandingPage() {
   const router = useRouter()
   const [scrolled, setScrolled] = useState(false)
-  const [lang, setLang] = useState<Lang>('en')
+  const [lang, setLang] = useState<Lang>('ja')
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const heroRef = useRef<HTMLDivElement>(null)
 

@@ -58,7 +58,7 @@ export default function UpgradeModal({ reason, onClose }: Props) {
 
         <div style={{ background: tokens.bgHover, borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '11px', color: tokens.textTertiary, fontWeight: '600', letterSpacing: '0.06em', marginBottom: '10px' }}>
-            PRO — $7 / {lang === 'ja' ? '月' : lang === 'zh' ? '月' : 'month'}
+            PRO — $7 / {lang === 'ja' ? '月'  : 'month'}
           </div>
           {proFeatures.map((f, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: tokens.text, marginBottom: i < proFeatures.length - 1 ? '6px' : '0' }}>
@@ -70,11 +70,11 @@ export default function UpgradeModal({ reason, onClose }: Props) {
         <button
           onClick={() => { onClose(); window.location.href = '/pricing' }}
           style={{ width: '100%', padding: '13px', background: '#38BDF8', color: '#08080F', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', marginBottom: '10px' }}>
-          {lang === 'ja' ? 'Proにアップグレード' : lang === 'zh' ? '升级到Pro' : 'Upgrade to Pro'}
+          {lang === 'ja' ? 'Proにアップグレード'  : 'Upgrade to Pro'}
         </button>
         <button onClick={onClose}
           style={{ width: '100%', padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', color: tokens.textTertiary, fontFamily: 'inherit' }}>
-          {lang === 'ja' ? '後で' : lang === 'zh' ? '稍后再说' : 'Maybe later'}
+          {lang === 'ja' ? '後で'  : 'Maybe later'}
         </button>
       </div>
     </div>
