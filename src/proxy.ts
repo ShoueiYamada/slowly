@@ -22,7 +22,9 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
-  if (!user && (pathname.startsWith('/dashboard') || pathname.startsWith('/clients') || pathname.startsWith('/invoice') || pathname.startsWith('/reminders'))) {
+  const protectedRoutes = ['/dashboard', '/clients', '/invoice', '/reminders', '/pomodoro', '/goal', '/pricing', '/focus']
+
+  if (!user && protectedRoutes.some(r => pathname.startsWith(r))) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
@@ -34,5 +36,15 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|landing).*)'],
+  matcher: [
+    '/dashboard/:path*',
+    '/clients/:path*',
+    '/invoice/:path*',
+    '/reminders/:path*',
+    '/pomodoro/:path*',
+    '/goal/:path*',
+    '/pricing/:path*',
+    '/focus/:path*',
+    '/login',
+  ],
 }
