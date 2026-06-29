@@ -286,6 +286,92 @@ export default function LandingPage() {
 
       <div className="line" />
 
+
+      <section style={{ padding: '6rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
+        <div className="section-center" style={{ marginBottom: '3rem' }}>
+          <div className="section-label">Why Flowly</div>
+          <h2 className="section-title">Built for Japanese freelancers.<br />Not for teams.</h2>
+        </div>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+            <thead>
+              <tr>
+                <th style={{ padding: '12px 16px', textAlign: 'left', color: 'rgba(255,255,255,0.4)', fontWeight: '600', fontSize: '12px', letterSpacing: '0.06em', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>FEATURE</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center', color: '#38BDF8', fontWeight: '700', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Flowly</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: '600', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Toggl</th>
+                <th style={{ padding: '12px 16px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: '600', fontSize: '13px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>Harvest</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { feature: 'Tax report for Japan', flowly: true, toggl: false, harvest: false },
+                { feature: 'Auto currency conversion', flowly: true, toggl: false, harvest: '△' },
+                { feature: 'AI payment reminders', flowly: true, toggl: false, harvest: false },
+                { feature: 'Japanese UI', flowly: true, toggl: false, harvest: false },
+                { feature: 'PDF invoice generation', flowly: true, toggl: false, harvest: true },
+                { feature: 'Free plan available', flowly: true, toggl: true, harvest: false },
+                { feature: 'Price', flowly: '$19/mo', toggl: '$9+/mo', harvest: '$12+/mo' },
+              ].map((row, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <td style={{ padding: '14px 16px', color: 'rgba(255,255,255,0.7)' }}>{row.feature}</td>
+                  <td style={{ padding: '14px 16px', textAlign: 'center', color: '#38BDF8', fontWeight: '600' }}>
+                    {typeof row.flowly === 'boolean' ? (row.flowly ? '✓' : '✗') : row.flowly}
+                  </td>
+                  <td style={{ padding: '14px 16px', textAlign: 'center', color: typeof row.toggl === 'boolean' ? (row.toggl ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)') : 'rgba(255,255,255,0.4)' }}>
+                    {typeof row.toggl === 'boolean' ? (row.toggl ? '✓' : '✗') : row.toggl}
+                  </td>
+                  <td style={{ padding: '14px 16px', textAlign: 'center', color: typeof row.harvest === 'boolean' ? (row.harvest ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)') : 'rgba(255,255,255,0.4)' }}>
+                    {typeof row.harvest === 'boolean' ? (row.harvest ? '✓' : '✗') : row.harvest}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div className="divider" />
+      {lang === 'en' && null}
+      <section style={{ padding: '5rem 2rem', maxWidth: '860px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div className="section-label">{lang === 'ja' ? 'なぜFlowlyか' : 'Why Flowly'}</div>
+          <h2 className="section-title">
+            {lang === 'ja' ? <>チームツールではなく、<br />日本人フリーランサーのために。</> : <>Built for Japanese freelancers.<br />Not for teams.</>}
+          </h2>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {(lang === 'ja' ? [
+            { icon: '✗', problem: '既存ツールは確定申告に対応していない', solution: 'Flowlyは年間収入レポートをPDF出力' },
+            { icon: '✗', problem: '為替換算を手動でやっている', solution: 'USD・EUR・GBPをリアルタイムで円換算' },
+            { icon: '✗', problem: '未払いの催促メールが書けない', solution: 'AIが英語の督促メールを自動生成' },
+            { icon: '✗', problem: '日本語UIのツールがない', solution: '日本語・英語を切り替え可能' },
+            { icon: '✗', problem: '送金手数料を考慮できていない', solution: 'Wise・PayPal手数料を引いた実収入を表示' },
+            { icon: '✗', problem: '高すぎる・機能が多すぎる', solution: 'フリーランサーに必要な機能だけ $19/月' },
+          ] : [
+            { icon: '✗', problem: 'No tax report for Japan', solution: 'Flowly exports annual income report as PDF' },
+            { icon: '✗', problem: 'Manual currency conversion', solution: 'USD, EUR, GBP auto-converted to JPY in real time' },
+            { icon: '✗', problem: 'Chasing payments is awkward', solution: 'AI drafts the perfect follow-up email for you' },
+            { icon: '✗', problem: 'No Japanese UI available', solution: 'Switch between Japanese and English anytime' },
+            { icon: '✗', problem: 'Transfer fees not accounted for', solution: 'Wise & PayPal fees deducted from your net income' },
+            { icon: '✗', problem: 'Too expensive or too complex', solution: 'Only what freelancers need — $19/month' },
+          ]).map((item, i) => (
+            <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ padding: '1rem 1.25rem', background: 'rgba(239,68,68,0.05)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ color: 'rgba(239,68,68,0.5)', fontSize: '16px', flexShrink: 0 }}>✗</span>
+                <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', lineHeight: '1.5' }}>{item.problem}</span>
+              </div>
+              <div style={{ padding: '1rem 1.25rem', background: 'rgba(56,189,248,0.04)', display: 'flex', alignItems: 'center', gap: '10px', borderLeft: '1px solid rgba(255,255,255,0.06)' }}>
+                <span style={{ color: '#38BDF8', fontSize: '16px', flexShrink: 0 }}>✓</span>
+                <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.5' }}>{item.solution}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="divider" />
+
+
       <section id="pricing" className="section section-center">
         <div className="section-label">{c.pl}</div>
         <h2 className="section-title">{c.pt}</h2>
