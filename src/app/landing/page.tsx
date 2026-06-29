@@ -129,7 +129,7 @@ export default function LandingPage() {
 
   const en = {
     eyebrow: 'Now in beta',
-    h1a: '海外クライアントへの請求書を、', h1b: '日本語で管理する。', h1c: '',
+    h1a: 'Work smarter.', h1b: 'Get paid faster.', h1c: '',
     sub: 'The minimal time tracking tool for freelancers who work globally. Log hours, generate invoices, chase payments — all in one place.',
     cta1: 'Start for free', cta2: 'View pricing',
     s1: '0', s2: '3', s3: '4+',
