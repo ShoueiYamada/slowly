@@ -102,7 +102,7 @@ export default function PricingPage() {
                 {lang === 'ja' ? '一番人気' : 'MOST POPULAR'}
               </span>
               <div style={{ fontSize: '13px', fontWeight: '600', color: '#38BDF8', letterSpacing: '0.06em', marginBottom: '1rem' }}>PRO</div>
-              <div style={{ fontSize: '48px', fontWeight: '800', color: tokens.text, letterSpacing: '-2px', marginBottom: '4px' }}>$7</div>
+              <div style={{ fontSize: '48px', fontWeight: '800', color: tokens.text, letterSpacing: '-2px', marginBottom: '4px' }}>$19</div>
               <div style={{ fontSize: '14px', color: tokens.textTertiary, marginBottom: '2rem' }}>
                 {lang === 'ja' ? '月額' : 'per month'}
               </div>
