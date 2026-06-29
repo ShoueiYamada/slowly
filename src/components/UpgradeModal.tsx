@@ -33,7 +33,7 @@ export default function UpgradeModal({ reason, onClose }: Props) {
 
   const proFeatures = lang === 'ja'
     ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', 'PDFロゴなし', '優先サポート']
-    : : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without Flowly logo', 'Priority support']
+    : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without Flowly logo', 'Priority support']
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
