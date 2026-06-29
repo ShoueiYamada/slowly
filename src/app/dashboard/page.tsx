@@ -28,13 +28,15 @@ export default function Dashboard() {
   }, [])
 
   if (!user) return null
-  const sidebarW = collapsed ? 56 : 232
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => { const check = () => setIsMobile(window.innerWidth < 768); check(); window.addEventListener('resize', check); return () => window.removeEventListener('resize', check) }, [])
+  const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
       <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ marginLeft: sidebarW + 'px', flex: 1, transition: 'margin-left 0.2s cubic-bezier(0.4,0,0.2,1)', minHeight: '100vh' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 2.5rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: isMobile ? '4.5rem 1rem 1rem' : '2rem 2.5rem' }}>
           <div style={{ marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid ' + tokens.border }}>
             <h1 style={{ fontSize: '20px', fontWeight: '600', color: tokens.text, margin: '0 0 3px', letterSpacing: '-0.4px' }}>
               {lang === 'ja' ? 'ダッシュボード' : lang === 'zh' ? '工作台' : 'Dashboard'}

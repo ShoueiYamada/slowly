@@ -87,7 +87,7 @@ export default function LandingPage() {
 
     .line { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); }
 
-    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; overflow: hidden; margin-top: 4rem; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; overflow: hidden; margin-top: 4rem; } @media (max-width: 768px) { .features-grid { grid-template-columns: 1fr; } .hero-title { letter-spacing: -1px !important; } .stats { gap: 2rem !important; } .pricing-grid { grid-template-columns: 1fr !important; } }
     .feature { background: #060a0f; padding: 2rem; transition: background 0.2s; }
     .feature:hover { background: #0a1020; }
     .feature-num { font-size: 11px; color: rgba(255,255,255,0.15); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 1.5rem; font-variant-numeric: tabular-nums; }
