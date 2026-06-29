@@ -37,7 +37,7 @@ export default function Dashboard() {
   if (!user) return null
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg, overflowX: 'hidden' }}>
       <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ marginLeft: sidebarW + 'px', flex: 1, transition: 'margin-left 0.2s cubic-bezier(0.4,0,0.2,1)', minHeight: '100vh' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: isMobile ? '4.5rem 1rem 1rem' : '2rem 2.5rem' }}>
@@ -54,12 +54,12 @@ export default function Dashboard() {
           <ExchangeRates />
           <NetRevenueCard userId={user.id} refresh={refresh} />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 320px', gap: '1.5rem', alignItems: 'start' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <RevenueChart userId={user.id} refresh={refresh} lang={lang} />
               <TimeEntryList userId={user.id} refresh={refresh} lang={lang} />
             </div>
-            <div style={{ position: 'sticky', top: '1.5rem' }}>
+            <div style={{ position: isMobile ? 'static' : 'sticky', top: '1.5rem' }}>
               <Timer userId={user.id} onSaved={() => setRefresh(r => r + 1)} lang={lang} />
             </div>
           </div>

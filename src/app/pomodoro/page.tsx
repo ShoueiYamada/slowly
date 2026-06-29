@@ -142,7 +142,7 @@ export default function PomodoroPage() {
   if (!user) return null
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg, overflowX: 'hidden' }}>
       <style>{animStyle}</style>
       {focusMode && (
         <FocusMode seconds={seconds} description={description} clientName={selectedClient?.name || ''} running={running} onExit={() => setFocusMode(false)} onStop={stopTimer} lang={lang} />

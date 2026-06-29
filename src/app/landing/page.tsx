@@ -102,7 +102,7 @@ export default function LandingPage() {
     .step-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px; letter-spacing: -0.3px; }
     .step-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.6; }
 
-    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4rem; }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4rem; } @media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } .features-grid { grid-template-columns: 1fr !important; } .stats { gap: 1.5rem !important; } .hero-title { font-size: clamp(36px, 10vw, 84px) !important; letter-spacing: -1px !important; } .hero-actions { flex-direction: column; align-items: center; } }
     .pricing-card { border-radius: 16px; padding: 2.5rem; border: 1px solid rgba(56,189,248,0.08); background: rgba(56,189,248,0.02); }
     .pricing-card.pro { border-color: rgba(56,189,248,0.2); background: rgba(56,189,248,0.03); }
     .plan-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem; }
