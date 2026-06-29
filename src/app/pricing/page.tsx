@@ -52,7 +52,14 @@ export default function PricingPage() {
     : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without Flowly logo', 'Priority support', 'Monthly reports (coming soon)']
 
   if (!user) return null
-  const sidebarW = collapsed ? 64 : 240
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>

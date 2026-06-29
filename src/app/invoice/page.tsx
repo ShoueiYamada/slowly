@@ -98,7 +98,14 @@ export default function InvoicePage() {
   const lbl = { display: 'block' as const, fontSize: '12px', color: tokens.textTertiary, marginBottom: '6px', fontWeight: '500' as const }
 
   if (!user) return null
-  const sidebarW = collapsed ? 64 : 240
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
