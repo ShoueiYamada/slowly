@@ -189,7 +189,7 @@ export default function LandingPage() {
     ff: ['クライアント5件まで', '請求書10件/月', 'AI督促5回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標'],
     pf: ['クライアント無制限', '請求書無制限', 'AI督促無制限', 'ブランドなしPDF', '優先サポート'],
     fb: '始める', pb: 'Proにアップグレード',
-    ct: '海外案件の管理を、\nもっとスマートに。',
+    ct: 'Manage overseas work\nsmarter.',
     cs: '英語の請求書も、日本の確定申告も、Flowlyひとつで完結。',
     cb: '無料で始める — カード不要',
     signin: 'ログイン', signup: '新規登録',
@@ -294,7 +294,7 @@ export default function LandingPage() {
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <div className="section-label">{lang === 'ja' ? 'なぜFlowlyか' : 'Why Flowly'}</div>
           <h2 className="section-title">
-            {lang === 'ja' ? <>チームツールではなく、<br />日本人フリーランサーのために。</> : <>Built for Japanese freelancers.<br />Not for teams.</>}
+            Built for Japanese freelancers.<br />Not for teams.
           </h2>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
