@@ -78,6 +78,7 @@ export default function GoalPage() {
   const daysLeft = daysInMonth - dayOfMonth
   const dailyNeeded = daysLeft > 0 ? Math.round(remaining / daysLeft) : 0
   const inp = { width: '100%', padding: '11px 14px', border: '1px solid ' + tokens.border, borderRadius: '12px', fontSize: '14px', boxSizing: 'border-box' as const, color: tokens.text, outline: 'none', fontFamily: 'inherit', background: tokens.bgHover }
+
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -86,7 +87,6 @@ export default function GoalPage() {
     return () => window.removeEventListener('resize', check)
   }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
-
   if (!user) return null
 
   return (

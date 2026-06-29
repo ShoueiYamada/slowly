@@ -95,7 +95,6 @@ export default function RemindersPage() {
     { key: 'strong', label: lang === 'ja' ? '強め' : lang === 'zh' ? '强硬' : 'Strong', desc: lang === 'ja' ? '最終警告に' : 'Final warning' },
   ]
 
-  if (!user) return null
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -104,6 +103,7 @@ export default function RemindersPage() {
     return () => window.removeEventListener('resize', check)
   }, [])
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
+  if (!user) return null
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
