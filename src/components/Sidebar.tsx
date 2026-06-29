@@ -101,6 +101,7 @@ export default function Sidebar({ userEmail, onSignOut, collapsed, setCollapsed 
     { href: '/reminders', icon: 'reminders', label: lang === 'ja' ? 'AI督促' : lang === 'zh' ? 'AI催款' : 'AI Reminders', badge: 'AI' },
     { href: '/pomodoro', icon: 'pomodoro', label: lang === 'ja' ? 'ポモドーロ' : lang === 'zh' ? '番茄钟' : 'Pomodoro' },
     { href: '/goal', icon: 'goal', label: lang === 'ja' ? '目標収益' : lang === 'zh' ? '收益目标' : 'Revenue Goal' },
+    { href: '/tax-report', icon: 'taxreport', label: lang === 'ja' ? '確定申告レポート' : 'Tax Report', badge: 'NEW' },
     { href: '/pricing', icon: 'pricing', label: lang === 'ja' ? 'プランと料金' : lang === 'zh' ? '套餐价格' : 'Pricing' },
   ]
 
