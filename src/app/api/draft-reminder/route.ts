@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       ? (lang === 'ja' ? '丁寧だが毅然とした' : 'polite but firm')
       : (lang === 'ja' ? '最終警告として強め' : 'strong final warning')
 
-    const langInstruction = lang === 'ja' ? '日本語で書いてください。' : lang === 'zh' ? '请用中文写。' : 'Write in English.'
+    const langInstruction = lang === 'ja' ? '日本語で書いてください。' : 'Write in English.'
 
     const prompt = `You are a professional freelancer writing a payment reminder email.
 ${langInstruction}
