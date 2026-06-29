@@ -128,10 +128,10 @@ export default function LandingPage() {
   `
 
   const en = {
-    eyebrow: 'Now in beta',
-    h1a: 'Work smarter.', h1b: 'Get paid faster.', h1c: '',
-    sub: 'The minimal time tracking tool for freelancers who work globally. Log hours, generate invoices, chase payments — all in one place.',
-    cta1: 'Start for free', cta2: 'View pricing',
+    eyebrow: 'Built for Japanese freelancers with global clients',
+    h1a: 'Invoice overseas clients.', h1b: 'Get paid faster.', h1c: '',
+    sub: 'The only time tracking tool built for Japanese freelancers with global clients. English invoices, Japanese records, tax reports — all in one place.',
+    cta1: 'Start free — no card needed', cta2: 'View pricing',
     s1: '0', s2: '3', s3: '4+',
     l1: 'to get started', l2: 'languages', l3: 'currencies',
     fl: 'Features', ft: 'Built for focus,\nnot feature bloat',
@@ -165,9 +165,9 @@ export default function LandingPage() {
     eyebrow: '海外案件特化 · 無料で始める',
     h1a: '海外クライアントへの請求書を、', h1b: '日本語で管理する。', h1c: '',
     sub: '英語の請求書を自動生成しながら、自分用の記録は日本語で。為替・税金・未払い督促まで、海外案件に特化したツール。',
-    cta1: '無料で始める', cta2: '機能を見る',
-    s1: '¥0', s2: '4', s3: '無制限',
-    l1: '無料で始められる', l2: '対応通貨', l3: 'AI督促メール',
+    cta1: '今すぐ無料で始める', cta2: '機能を見る',
+    s1: '完全無料', s2: '4通貨', s3: 'AI搭載',
+    l1: 'クレジットカード不要', l2: 'USD/EUR/GBP/JPY', l3: '督促メール自動生成',
     fl: '機能', ft: '余計な機能はない\n必要なものだけ',
     features: [
       { n: '01', t: '英語請求書を自動生成', d: '作業時間を記録するだけで、英語のPDF請求書が完成。海外クライアントにそのまま送れる。' },
