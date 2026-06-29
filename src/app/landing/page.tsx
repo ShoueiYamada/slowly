@@ -250,6 +250,13 @@ export default function LandingPage() {
 
       <div className="line" />
 
+
+      <section style={{ padding: '0 2rem 6rem', maxWidth: '1100px', margin: '0 auto' }}>
+        <div style={{ borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(56,189,248,0.15)', boxShadow: '0 40px 100px -20px rgba(56,189,248,0.15)' }}>
+          <img src="/screenshots/dashboard-preview.png" alt="Flowly dashboard" style={{ width: '100%', display: 'block' }} />
+        </div>
+      </section>
+
       <section id="features" className="section section-center">
         <div className="section-label">{c.fl}</div>
         <h2 className="section-title" style={{ whiteSpace: 'pre-line' }}>{c.ft}</h2>
