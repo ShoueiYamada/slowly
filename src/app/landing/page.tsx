@@ -341,6 +341,42 @@ export default function LandingPage() {
       <div className="divider" />
 
 
+      <section style={{ padding: '5rem 2rem', maxWidth: '760px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div className="section-label">{lang === 'ja' ? 'AI督促メール' : 'AI Reminders'}</div>
+          <h2 className="section-title">
+            {lang === 'ja' ? <>催促メールを、AIが<br />数秒で書いてくれる。</> : <>Let AI write the<br />awkward email for you.</>}
+          </h2>
+        </div>
+        <div style={{ borderRadius: '14px', border: '1px solid rgba(56,189,248,0.15)', background: 'rgba(255,255,255,0.02)', overflow: 'hidden' }}>
+          <div style={{ padding: '0.75rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF5F57' }} />
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FEBC2E' }} />
+            <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#28C840' }} />
+            <span style={{ marginLeft: '8px', fontSize: '11px', color: 'rgba(255,255,255,0.3)' }}>
+              {lang === 'ja' ? '生成された督促メール' : 'Generated reminder email'}
+            </span>
+          </div>
+          <div style={{ padding: '1.5rem' }}>
+            <div style={{ fontSize: '11px', color: 'rgba(56,189,248,0.7)', fontWeight: '600', letterSpacing: '0.06em', marginBottom: '6px' }}>SUBJECT</div>
+            <div style={{ fontSize: '14px', color: '#fff', fontWeight: '600', marginBottom: '1.25rem' }}>
+              Payment Reminder – Invoice #1002 – 14 Days Overdue
+            </div>
+            <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.55)', lineHeight: '1.8' }}>
+              Dear Acme Corp Team,<br/><br/>
+              I hope this message finds you well. I am writing to bring to your attention that Invoice #1002, issued for $1,200.00, remains outstanding as of today. The payment was due 14 days ago.<br/><br/>
+              I understand oversights can occur, and I appreciate your team manages many responsibilities. As this is now two weeks past due, I kindly ask that you prioritize this matter.<br/><br/>
+              <span style={{ color: 'rgba(255,255,255,0.3)' }}>...</span>
+            </div>
+          </div>
+        </div>
+        <p style={{ textAlign: 'center', fontSize: '13px', color: 'rgba(255,255,255,0.3)', marginTop: '1.5rem' }}>
+          {lang === 'ja' ? '3段階のトーン（やわらか・毅然・最終警告）から選べます' : 'Choose from 3 tones: gentle, firm, or final warning'}
+        </p>
+      </section>
+
+      <div className="divider" />
+
       <section id="pricing" className="section section-center">
         <div className="section-label">{c.pl}</div>
         <h2 className="section-title">{c.pt}</h2>
