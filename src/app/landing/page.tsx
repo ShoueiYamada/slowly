@@ -142,6 +142,8 @@ export default function LandingPage() {
       { n: '04', t: 'AI reminders', d: 'Let AI draft the payment reminder email. Gentle, firm, or final warning.' },
       { n: '05', t: 'Revenue insights', d: 'Weekly and monthly earnings at a glance. Know which clients drive growth.' },
       { n: '06', t: 'Focus mode', d: 'Full-screen timer with nothing else. Designed for deep work sessions.' },
+      { n: '07', t: 'Pomodoro timer', d: 'Built-in focus sessions with automatic time logging. Stay productive, track everything.' },
+      { n: '08', t: 'Revenue goals', d: 'Set a monthly income target and track progress in real time, broken down by client.' },
     ],
     hl: 'How it works', ht: 'From first click\nto paid invoice',
     steps: [
@@ -188,7 +190,7 @@ export default function LandingPage() {
     ],
     pl: '料金', pt: 'シンプルな料金体系',
     ps: '隠れた費用なし。いつでもキャンセル可能。',
-    ff: ['クライアント5件まで', '請求書10件/月', 'AI督促5回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標'],
+    ff: ['クライアント2件まで', '請求書3件/月', 'AI督促2回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標'],
     pf: ['クライアント無制限', '請求書無制限', 'AI督促無制限', 'ブランドなしPDF', '優先サポート'],
     fb: '始める', pb: 'Proにアップグレード',
     ct: 'Manage overseas work\nsmarter.',
