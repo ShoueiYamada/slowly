@@ -47,8 +47,8 @@ export default function PricingPage() {
   }
 
   const freeFeatures = lang === 'ja'
-    ? ['クライアント2件まで', '請求書3件/月', 'AI督促メール2回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標収益']
-    : ['Up to 2 clients', '3 invoices / month', '2 AI reminders / month', 'Timer & dashboard', 'Pomodoro & revenue goal']
+    ? ['クライアント3件まで', '請求書5件/月', 'AI督促メール3回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標収益']
+    : ['Up to 3 clients', '5 invoices / month', '3 AI reminders / month', 'Timer & dashboard', 'Pomodoro & revenue goal']
 
   const proFeatures = lang === 'ja'
     ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', 'リアルタイム為替レート', '確定申告レポート', 'PDFロゴなし', '優先サポート']

@@ -142,8 +142,6 @@ export default function LandingPage() {
       { n: '04', t: 'AI reminders', d: 'Let AI draft the payment reminder email. Gentle, firm, or final warning.' },
       { n: '05', t: 'Revenue insights', d: 'Weekly and monthly earnings at a glance. Know which clients drive growth.' },
       { n: '06', t: 'Focus mode', d: 'Full-screen timer with nothing else. Designed for deep work sessions.' },
-      { n: '07', t: 'Pomodoro timer', d: 'Built-in focus sessions with automatic time logging. Stay productive, track everything.' },
-      { n: '08', t: 'Revenue goals', d: 'Set a monthly income target and track progress in real time, broken down by client.' },
     ],
     hl: 'How it works', ht: 'From first click\nto paid invoice',
     steps: [
@@ -154,7 +152,7 @@ export default function LandingPage() {
     ],
     pl: 'Pricing', pt: 'Simple pricing',
     ps: 'No hidden fees. Cancel anytime.',
-    ff: ['Up to 2 clients', '3 invoices / month', '2 AI reminders / month', 'Timer & dashboard', 'Pomodoro & goals'],
+    ff: ['Up to 3 clients', '5 invoices / month', '3 AI reminders / month', 'Timer & dashboard', 'Pomodoro & goals'],
     pf: ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'Live exchange rates', 'Tax report export', 'PDF without branding', 'Priority support'],
     fb: 'Get started', pb: 'Upgrade to Pro',
     ct: 'Stop losing money\nto untracked hours',
@@ -178,8 +176,6 @@ export default function LandingPage() {
       { n: '04', t: 'AI督促メール', d: '未払いのクライアントへの英語メールをAIが自動生成。催促の心理的負担をゼロに。' },
       { n: '05', t: '確定申告レポート', d: '年間の海外収入をまとめてPDF出力。税理士に渡すだけでOK。' },
       { n: '06', t: '送金手数料を考慮', d: 'WiseやPayPalの手数料を引いた実収入を表示。本当に手元に残る金額がわかる。' },
-      { n: '07', t: 'ポモドーロタイマー', d: '集中セッションを記録しながら自動で時間管理。生産性も記録も両立。' },
-      { n: '08', t: '目標収益トラッカー', d: '月間目標を設定してリアルタイムで進捗確認。クライアント別の内訳も。' },
     ],
     hl: '使い方', ht: '最初のクリックから\n入金まで',
     steps: [
@@ -190,7 +186,7 @@ export default function LandingPage() {
     ],
     pl: '料金', pt: 'シンプルな料金体系',
     ps: '隠れた費用なし。いつでもキャンセル可能。',
-    ff: ['クライアント2件まで', '請求書3件/月', 'AI督促2回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標'],
+    ff: ['クライアント3件まで', '請求書5件/月', 'AI督促3回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標'],
     pf: ['クライアント無制限', '請求書無制限', 'AI督促無制限', 'リアルタイム為替レート', '確定申告レポート', 'ブランドなしPDF', '優先サポート'],
     fb: '始める', pb: 'Proにアップグレード',
     ct: 'Manage overseas work\nsmarter.',
@@ -250,6 +246,9 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+        <p style={{ textAlign: 'center', fontSize: '13px', color: 'rgba(255,255,255,0.3)', marginTop: '2rem' }}>
+          {lang === 'ja' ? '+ ポモドーロタイマー・収益目標トラッカーも標準搭載' : '+ Pomodoro timer & revenue goal tracker included'}
+        </p>
       </section>
 
       <div className="line" />
