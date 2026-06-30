@@ -4,9 +4,9 @@ export type Plan = 'free' | 'pro'
 
 export const LIMITS = {
   free: {
-    clients: 5,
-    invoicesPerMonth: 10,
-    remindersPerMonth: 5,
+    clients: 2,
+    invoicesPerMonth: 3,
+    remindersPerMonth: 2,
   },
   pro: {
     clients: Infinity,

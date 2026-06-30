@@ -3,7 +3,7 @@ import { useTheme } from '@/contexts/ThemeContext'
 import { useLang } from '@/contexts/LangContext'
 
 type Props = {
-  reason: 'clients' | 'invoices' | 'reminders'
+  reason: 'clients' | 'invoices' | 'reminders' | 'taxreport' | 'exchangerate'
   onClose: () => void
 }
 

@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useTheme } from '@/contexts/ThemeContext'
 import { useLang } from '@/contexts/LangContext'
 import Sidebar from '@/components/Sidebar'
+import UpgradeModal from '@/components/UpgradeModal'
+import { getUserPlan } from '@/lib/plan'
 
 type Entry = { started_at: string; duration_seconds: number; hourly_rate: number; client_id: string | null }
 type Client = { id: string; name: string; currency: string; hourly_rate: number }
@@ -18,6 +20,8 @@ export default function TaxReportPage() {
   const [rates, setRates] = useState<Record<string, number>>({ USD: 150, EUR: 163, GBP: 190, JPY: 1 })
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [loading, setLoading] = useState(true)
+  const [showUpgrade, setShowUpgrade] = useState(false)
+  const [plan, setPlan] = useState<'free'|'pro'>('free')
   const { tokens } = useTheme()
   const { lang } = useLang()
   const supabase = createClient()
@@ -33,7 +37,13 @@ export default function TaxReportPage() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) router.push('/login')
-      else { setUser(user); loadData(user.id) }
+      else {
+        setUser(user); loadData(user.id)
+        getUserPlan().then(p => {
+          setPlan(p)
+          if (p === 'free') setShowUpgrade(true)
+        })
+      }
     })
     fetch('/api/exchange-rate').then(r => r.json()).then(data => {
       if (data.rates) setRates(data.rates)
@@ -110,6 +120,15 @@ export default function TaxReportPage() {
   `
 
   if (!user) return null
+
+  if (plan === 'free') {
+    return (
+      <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
+        {showUpgrade && <UpgradeModal reason='taxreport' onClose={() => router.push('/dashboard')} />}
+        <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+      </div>
+    )
+  }
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg, overflowX: 'hidden' }}>
