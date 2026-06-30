@@ -128,7 +128,7 @@ export default function LandingPage() {
   `
 
   const en = {
-    eyebrow: 'Built for Japanese freelancers with global clients',
+    eyebrow: 'Beta pricing — $19/mo locked in for early users',
     h1a: 'Invoice overseas clients.', h1b: 'Get paid faster.', h1c: '',
     sub: 'The only time tracking tool built for Japanese freelancers with global clients. English invoices, Japanese records, tax reports — all in one place.',
     cta1: 'Start free — no card needed', cta2: 'View pricing',
@@ -380,11 +380,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="footer">
+      <footer className="footer" style={{ flexWrap: 'wrap', gap: '1rem' }}>
         <span className="logo" style={{ fontSize: '15px' }}>Flowly</span>
         <div className="footer-links">
           <button className="nav-link" style={{ fontSize: '12px' }} onClick={() => router.push('/login?mode=signin')}>{c.signin}</button>
           <button className="nav-link" style={{ fontSize: '12px' }} onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>{lang === 'ja' ? '料金' : 'Pricing'}</button>
+          <button className="nav-link" style={{ fontSize: '12px' }} onClick={() => router.push('/privacy')}>{lang === 'ja' ? 'プライバシーポリシー' : 'Privacy'}</button>
+          <button className="nav-link" style={{ fontSize: '12px' }} onClick={() => router.push('/terms')}>{lang === 'ja' ? '利用規約' : 'Terms'}</button>
         </div>
         <span className="footer-text">© 2026 Flowly</span>
       </footer>
