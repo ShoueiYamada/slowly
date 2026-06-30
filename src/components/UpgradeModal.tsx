@@ -13,27 +13,32 @@ export default function UpgradeModal({ reason, onClose }: Props) {
 
   const messages = {
     clients: {
-      en: { title: 'Client limit reached', desc: 'You\'ve reached the 5 client limit on the free plan. Upgrade to Pro for unlimited clients.' },
-      ja: { title: 'クライアント数の上限に達しました', desc: '無料プランのクライアント数は5件までです。Proにアップグレードして無制限に追加しましょう。' },
-      zh: { title: '已达到客户数量上限', desc: '免费版最多支持5个客户，升级Pro版即可无限添加。' },
+      en: { title: 'Client limit reached', desc: 'You\'ve reached the client limit on the free plan. Upgrade to Pro for unlimited clients.' },
+      ja: { title: 'クライアント数の上限に達しました', desc: '無料プランのクライアント数上限に達しました。Proにアップグレードして無制限に追加しましょう。' },
     },
     invoices: {
-      en: { title: 'Invoice limit reached', desc: 'You\'ve used all 10 invoices for this month. Upgrade to Pro for unlimited invoices.' },
-      ja: { title: '請求書の上限に達しました', desc: '今月の請求書は10件までです。Proにアップグレードして無制限に作成しましょう。' },
-      zh: { title: '已达到发票数量上限', desc: '本月已用完10张发票，升级Pro版即可无限生成。' },
+      en: { title: 'Invoice limit reached', desc: 'You\'ve used all invoices for this month. Upgrade to Pro for unlimited invoices.' },
+      ja: { title: '請求書の上限に達しました', desc: '今月の請求書の上限に達しました。Proにアップグレードして無制限に作成しましょう。' },
     },
     reminders: {
-      en: { title: 'Reminder limit reached', desc: 'You\'ve used all 5 AI reminders for this month. Upgrade to Pro for unlimited reminders.' },
-      ja: { title: 'AI督促メールの上限に達しました', desc: '今月のAI督促メールは5回までです。Proにアップグレードして無制限に使いましょう。' },
-      zh: { title: '已达到AI催款邮件上限', desc: '本月已用完5次AI催款邮件，升级Pro版即可无限使用。' },
+      en: { title: 'Reminder limit reached', desc: 'You\'ve used all AI reminders for this month. Upgrade to Pro for unlimited reminders.' },
+      ja: { title: 'AI督促メールの上限に達しました', desc: '今月のAI督促メールの上限に達しました。Proにアップグレードして無制限に使いましょう。' },
+    },
+    taxreport: {
+      en: { title: 'Tax Report is a Pro feature', desc: 'Export your annual income report for tax filing. Upgrade to Pro to unlock this feature.' },
+      ja: { title: '確定申告レポートはPro限定機能です', desc: '年間収入レポートをPDF出力できます。Proにアップグレードして使いましょう。' },
+    },
+    exchangerate: {
+      en: { title: 'Live Exchange Rates is a Pro feature', desc: 'See real-time currency conversion and net income after fees. Upgrade to Pro.' },
+      ja: { title: '為替レートはPro限定機能です', desc: 'リアルタイム為替換算と手数料控除後の実収入を確認できます。Proにアップグレードしましょう。' },
     },
   }
 
-  const msg = messages[reason][lang] || messages[reason]['en']
+  const msg = messages[reason]?.[lang as 'en' | 'ja'] || messages[reason]?.['en']
 
   const proFeatures = lang === 'ja'
-    ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', 'PDFロゴなし', '優先サポート']
-    : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without Flowly logo', 'Priority support']
+    ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', '為替レート・実収入表示', '確定申告レポート', 'PDFロゴなし', '優先サポート']
+    : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'Live exchange rates', 'Tax report export', 'PDF without Flowly logo', 'Priority support']
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
@@ -48,15 +53,15 @@ export default function UpgradeModal({ reason, onClose }: Props) {
         </div>
 
         <h2 style={{ fontSize: '20px', fontWeight: '700', color: tokens.text, marginBottom: '8px', letterSpacing: '-0.4px' }}>
-          {msg.title}
+          {msg?.title}
         </h2>
         <p style={{ fontSize: '14px', color: tokens.textSecondary, lineHeight: '1.6', marginBottom: '1.5rem' }}>
-          {msg.desc}
+          {msg?.desc}
         </p>
 
         <div style={{ background: tokens.bgHover, borderRadius: '12px', padding: '1rem', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '11px', color: tokens.textTertiary, fontWeight: '600', letterSpacing: '0.06em', marginBottom: '10px' }}>
-            PRO — $7 / {lang === 'ja' ? '月'  : 'month'}
+            PRO — $19 / {lang === 'ja' ? '月' : 'month'}
           </div>
           {proFeatures.map((f, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: tokens.text, marginBottom: i < proFeatures.length - 1 ? '6px' : '0' }}>
@@ -68,11 +73,11 @@ export default function UpgradeModal({ reason, onClose }: Props) {
         <button
           onClick={() => { onClose(); window.location.href = '/pricing' }}
           style={{ width: '100%', padding: '13px', background: '#38BDF8', color: '#08080F', border: 'none', borderRadius: '12px', fontSize: '15px', fontWeight: '700', cursor: 'pointer', fontFamily: 'inherit', marginBottom: '10px' }}>
-          {lang === 'ja' ? 'Proにアップグレード'  : 'Upgrade to Pro'}
+          {lang === 'ja' ? 'Proにアップグレード' : 'Upgrade to Pro'}
         </button>
         <button onClick={onClose}
           style={{ width: '100%', padding: '10px', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '14px', color: tokens.textTertiary, fontFamily: 'inherit' }}>
-          {lang === 'ja' ? '後で'  : 'Maybe later'}
+          {lang === 'ja' ? '後で' : 'Maybe later'}
         </button>
       </div>
     </div>
