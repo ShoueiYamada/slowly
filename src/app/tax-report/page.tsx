@@ -125,7 +125,7 @@ export default function TaxReportPage() {
     return (
       <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg }}>
         {showUpgrade && <UpgradeModal reason='taxreport' onClose={() => router.push('/dashboard')} />}
-        <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+        <Sidebar userEmail={user.email || ''} onSignOut={() => { router.push('/login'); supabase.auth.signOut() }} collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
     )
   }
@@ -133,7 +133,7 @@ export default function TaxReportPage() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg, overflowX: 'hidden' }}>
       <style>{printStyle}</style>
-      <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <Sidebar userEmail={user.email || ''} onSignOut={() => { router.push('/login'); supabase.auth.signOut() }} collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ marginLeft: sidebarW + 'px', flex: 1, minWidth: 0, overflowX: 'hidden', padding: isMobile ? '4.5rem 1rem 1rem' : '2rem 2.5rem', transition: 'margin-left 0.2s' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto' }} id="tax-report">
 

@@ -60,7 +60,7 @@ export default function PricingPage() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: tokens.bg, overflowX: 'hidden' }}>
-      <Sidebar userEmail={user.email || ''} onSignOut={async () => { await supabase.auth.signOut(); router.push('/login') }} collapsed={collapsed} setCollapsed={setCollapsed} />
+      <Sidebar userEmail={user.email || ''} onSignOut={() => { router.push('/login'); supabase.auth.signOut() }} collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ marginLeft: sidebarW + 'px', flex: 1, minWidth: 0, overflowX: 'hidden', padding: isMobile ? '4.5rem 1rem 1.5rem' : '2.5rem 3rem', transition: 'margin-left 0.22s cubic-bezier(0.4,0,0.2,1)' }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
