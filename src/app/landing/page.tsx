@@ -191,7 +191,7 @@ export default function LandingPage() {
     pl: '料金', pt: 'シンプルな料金体系',
     ps: '隠れた費用なし。いつでもキャンセル可能。',
     ff: ['クライアント2件まで', '請求書3件/月', 'AI督促2回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標'],
-    pf: ['クライアント無制限', '請求書無制限', 'AI督促無制限', 'ブランドなしPDF', '優先サポート'],
+    pf: ['クライアント無制限', '請求書無制限', 'AI督促無制限', 'リアルタイム為替レート', '確定申告レポート', 'ブランドなしPDF', '優先サポート'],
     fb: '始める', pb: 'Proにアップグレード',
     ct: 'Manage overseas work\nsmarter.',
     cs: '英語の請求書も、日本の確定申告も、Flowlyひとつで完結。',
@@ -373,6 +373,35 @@ export default function LandingPage() {
         <p style={{ textAlign: 'center', fontSize: '13px', color: 'rgba(255,255,255,0.3)', marginTop: '1.5rem' }}>
           {lang === 'ja' ? '3段階のトーン（やわらか・毅然・最終警告）から選べます' : 'Choose from 3 tones: gentle, firm, or final warning'}
         </p>
+      </section>
+
+      <div className="divider" />
+
+      <section style={{ padding: '5rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div className="section-label">{lang === 'ja' ? '安心して使える理由' : 'Built to be trusted'}</div>
+          <h2 className="section-title">
+            {lang === 'ja' ? '財務データを扱うからこそ、\n透明性にこだわる。' : 'Handling financial data,\nso transparency matters.'}
+          </h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '14px', overflow: 'hidden' }}>
+          {(lang === 'ja' ? [
+            { t: 'データの保存場所', d: 'Supabase（米国・シンガポールのデータセンター）にRow Level Securityで保護して保存。あなたのデータは他のユーザーから完全に隔離されています。' },
+            { t: '決済情報', d: 'カード情報はStripeが直接処理し、Flowlyのサーバーには一切保存されません。PCI DSS準拠の決済基盤を使用しています。' },
+            { t: '為替レートの取得元', d: 'open.er-api.comのリアルタイムレートを使用。確定申告には国税庁が定めるTTMレート等での確認を推奨しています。' },
+            { t: '確定申告について', d: '白色・青色申告どちらにも使える年間収入の集計データを出力します。インボイス制度の適格請求書発行には対応していません（今後対応予定）。最終判断は税理士にご確認ください。' },
+          ] : [
+            { t: 'Where your data lives', d: 'Stored on Supabase (US/Singapore data centers) with Row Level Security. Your data is fully isolated from other users.' },
+            { t: 'Payment information', d: 'Card details are processed entirely by Stripe and never touch Flowly\'s servers. PCI DSS compliant payment infrastructure.' },
+            { t: 'Exchange rate source', d: 'Real-time rates from open.er-api.com. For official tax filing, we recommend verifying against your country\'s official rates.' },
+            { t: 'Tax filing scope', d: 'Income summary works for both simplified and blue-form tax returns in Japan. Does not yet support Invoice System (Qualified Invoice) issuance — coming soon. Always confirm with a licensed accountant.' },
+          ]).map((item, i) => (
+            <div key={i} style={{ background: '#080808', padding: '1.75rem' }}>
+              <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#fff', marginBottom: '8px' }}>{item.t}</h3>
+              <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.45)', lineHeight: '1.65' }}>{item.d}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <div className="divider" />
