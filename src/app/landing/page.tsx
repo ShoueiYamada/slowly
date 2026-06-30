@@ -87,7 +87,7 @@ export default function LandingPage() {
 
     .line { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); }
 
-    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; overflow: hidden; margin-top: 4rem; } @media (max-width: 768px) { .features-grid { grid-template-columns: 1fr; } .hero-title { letter-spacing: -1px !important; } .stats { gap: 2rem !important; } .pricing-grid { grid-template-columns: 1fr !important; } }
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04); border-radius: 16px; overflow: hidden; margin-top: 4rem; } @media (max-width: 768px) { .features-grid { grid-template-columns: 1fr; } .hero-title { letter-spacing: -1px !important; } .stats { gap: 2rem !important; } .pricing-grid { grid-template-columns: 1fr !important; } }
     .feature { background: #060a0f; padding: 2rem; transition: background 0.2s; }
     .feature:hover { background: #0a1020; }
     .feature-num { font-size: 11px; color: rgba(255,255,255,0.15); font-weight: 600; letter-spacing: 0.08em; margin-bottom: 1.5rem; font-variant-numeric: tabular-nums; }
@@ -102,7 +102,7 @@ export default function LandingPage() {
     .step-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px; letter-spacing: -0.3px; }
     .step-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.6; }
 
-    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4rem; } @media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } .features-grid { grid-template-columns: 1fr !important; } .stats { gap: 1.5rem !important; } .hero-title { font-size: clamp(36px, 10vw, 84px) !important; letter-spacing: -1px !important; } .hero-actions { flex-direction: column; align-items: center; } }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4rem; } @media (max-width: 900px) { .features-grid { grid-template-columns: repeat(2, 1fr) !important; } } @media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } .features-grid { grid-template-columns: 1fr !important; } .stats { gap: 1.5rem !important; } .hero-title { font-size: clamp(36px, 10vw, 84px) !important; letter-spacing: -1px !important; } .hero-actions { flex-direction: column; align-items: center; } }
     .pricing-card { border-radius: 16px; padding: 2.5rem; border: 1px solid rgba(56,189,248,0.08); background: rgba(56,189,248,0.02); }
     .pricing-card.pro { border-color: rgba(56,189,248,0.2); background: rgba(56,189,248,0.03); }
     .plan-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); margin-bottom: 1.5rem; }
@@ -152,8 +152,8 @@ export default function LandingPage() {
     ],
     pl: 'Pricing', pt: 'Simple pricing',
     ps: 'No hidden fees. Cancel anytime.',
-    ff: ['Up to 5 clients', '10 invoices / month', '5 AI reminders / month', 'Timer & dashboard', 'Pomodoro & goals'],
-    pf: ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without branding', 'Priority support'],
+    ff: ['Up to 2 clients', '3 invoices / month', '2 AI reminders / month', 'Timer & dashboard', 'Pomodoro & goals'],
+    pf: ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'Live exchange rates', 'Tax report export', 'PDF without branding', 'Priority support'],
     fb: 'Get started', pb: 'Upgrade to Pro',
     ct: 'Stop losing money\nto untracked hours',
     cs: 'Join freelancers who track smarter and get paid faster.',
@@ -176,6 +176,8 @@ export default function LandingPage() {
       { n: '04', t: 'AI督促メール', d: '未払いのクライアントへの英語メールをAIが自動生成。催促の心理的負担をゼロに。' },
       { n: '05', t: '確定申告レポート', d: '年間の海外収入をまとめてPDF出力。税理士に渡すだけでOK。' },
       { n: '06', t: '送金手数料を考慮', d: 'WiseやPayPalの手数料を引いた実収入を表示。本当に手元に残る金額がわかる。' },
+      { n: '07', t: 'ポモドーロタイマー', d: '集中セッションを記録しながら自動で時間管理。生産性も記録も両立。' },
+      { n: '08', t: '目標収益トラッカー', d: '月間目標を設定してリアルタイムで進捗確認。クライアント別の内訳も。' },
     ],
     hl: '使い方', ht: '最初のクリックから\n入金まで',
     steps: [

@@ -47,12 +47,12 @@ export default function PricingPage() {
   }
 
   const freeFeatures = lang === 'ja'
-    ? ['クライアント5件まで', '請求書10件/月', 'AI督促メール5回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標収益']
-    : ['Up to 5 clients', '10 invoices / month', '5 AI reminders / month', 'Timer & dashboard', 'Pomodoro & revenue goal']
+    ? ['クライアント2件まで', '請求書3件/月', 'AI督促メール2回/月', 'タイマー・ダッシュボード', 'ポモドーロ・目標収益']
+    : ['Up to 2 clients', '3 invoices / month', '2 AI reminders / month', 'Timer & dashboard', 'Pomodoro & revenue goal']
 
   const proFeatures = lang === 'ja'
-    ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', 'PDFロゴなし', '優先サポート', '月次レポート（近日公開）']
-    : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'PDF without Flowly logo', 'Priority support', 'Monthly reports (coming soon)']
+    ? ['クライアント無制限', '請求書無制限', 'AI督促メール無制限', 'リアルタイム為替レート', '確定申告レポート', 'PDFロゴなし', '優先サポート']
+    : ['Unlimited clients', 'Unlimited invoices', 'Unlimited AI reminders', 'Live exchange rates', 'Tax report export', 'PDF without Flowly logo', 'Priority support']
 
   const sidebarW = isMobile ? 0 : (collapsed ? 56 : 232)
 
