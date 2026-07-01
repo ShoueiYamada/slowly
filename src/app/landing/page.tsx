@@ -260,6 +260,28 @@ export default function LandingPage() {
         </div>
       </section>
 
+
+      <section style={{ padding: '0 2rem 5rem', maxWidth: '1100px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div>
+            <p style={{ fontSize: '12px', color: 'rgba(56,189,248,0.7)', fontWeight: '600', letterSpacing: '0.06em', marginBottom: '10px' }}>
+              {lang === 'ja' ? '確定申告レポート（Pro）' : 'TAX REPORT (PRO)'}
+            </p>
+            <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56,189,248,0.12)' }}>
+              <img src="/screenshots/tax-report-preview.png" alt="Tax report" style={{ width: '100%', display: 'block' }} />
+            </div>
+          </div>
+          <div>
+            <p style={{ fontSize: '12px', color: 'rgba(56,189,248,0.7)', fontWeight: '600', letterSpacing: '0.06em', marginBottom: '10px' }}>
+              {lang === 'ja' ? '請求書作成' : 'INVOICE CREATION'}
+            </p>
+            <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56,189,248,0.12)' }}>
+              <img src="/screenshots/invoice-preview.png" alt="Invoice" style={{ width: '100%', display: 'block' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="features" className="section section-center">
         <div className="section-label">{c.fl}</div>
         <h2 className="section-title" style={{ whiteSpace: 'pre-line' }}>{c.ft}</h2>
