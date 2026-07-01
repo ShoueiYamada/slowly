@@ -174,7 +174,7 @@ export default function LandingPage() {
       { n: '02', t: '日本語で自分用メモ', d: '請求書は英語、記録は日本語。自分用のメモを残しながら、確定申告にも対応。' },
       { n: '03', t: '為替を自動換算', d: 'USD・EUR・GBPを円に自動換算。実際にいくら稼いだか一目でわかる。' },
       { n: '04', t: 'AI督促メール', d: '未払いのクライアントへの英語メールをAIが自動生成。催促の心理的負担をゼロに。' },
-      { n: '05', t: '確定申告レポート', d: '年間の海外収入をまとめてPDF出力。税理士に渡すだけでOK。' },
+      { n: '05', t: '確定申告レポート', d: '白色・青色申告どちらにも対応。クライアント別・月別の年間収入をPDF出力。税理士にそのまま渡せます。TTMレートでの再計算を推奨する注記付き。' },
       { n: '06', t: '送金手数料を考慮', d: 'WiseやPayPalの手数料を引いた実収入を表示。本当に手元に残る金額がわかる。' },
     ],
     hl: '使い方', ht: '最初のクリックから\n入金まで',
@@ -388,12 +388,12 @@ export default function LandingPage() {
             { t: 'データの保存場所', d: 'Supabase（米国・シンガポールのデータセンター）にRow Level Securityで保護して保存。あなたのデータは他のユーザーから完全に隔離されています。' },
             { t: '決済情報', d: 'カード情報はStripeが直接処理し、Flowlyのサーバーには一切保存されません。PCI DSS準拠の決済基盤を使用しています。' },
             { t: '為替レートの取得元', d: 'open.er-api.comのリアルタイムレートを使用。確定申告には国税庁が定めるTTMレート等での確認を推奨しています。' },
-            { t: '確定申告について', d: '白色・青色申告どちらにも使える年間収入の集計データを出力します。インボイス制度の適格請求書発行には対応していません（今後対応予定）。最終判断は税理士にご確認ください。' },
+            { t: '確定申告への対応', d: '白色申告・青色申告どちらにも対応した年間収入レポートを出力します。クライアント別・月別の集計で税理士にそのまま渡せる形式。為替レートはopen.er-api.comのリアルタイムレートを使用（申告時はTTMレートでの再計算を推奨）。経費の仕分け機能・適格請求書（インボイス制度）発行は現在非対応・近日対応予定。' },
           ] : [
             { t: 'Where your data lives', d: 'Stored on Supabase (US/Singapore data centers) with Row Level Security. Your data is fully isolated from other users.' },
             { t: 'Payment information', d: 'Card details are processed entirely by Stripe and never touch Flowly\'s servers. PCI DSS compliant payment infrastructure.' },
             { t: 'Exchange rate source', d: 'Real-time rates from open.er-api.com. For official tax filing, we recommend verifying against your country\'s official rates.' },
-            { t: 'Tax filing scope', d: 'Income summary works for both simplified and blue-form tax returns in Japan. Does not yet support Invoice System (Qualified Invoice) issuance — coming soon. Always confirm with a licensed accountant.' },
+            { t: 'Tax filing scope', d: 'Exports annual income report compatible with both simplified and blue-form (青色申告) tax returns. Breakdown by client and month — ready to hand to your accountant. Exchange rates from open.er-api.com (recommend TTM rate for official filing). Expense categorization and Qualified Invoice (インボイス) issuance: coming soon.' },
           ]).map((item, i) => (
             <div key={i} style={{ background: '#080808', padding: '1.75rem' }}>
               <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#fff', marginBottom: '8px' }}>{item.t}</h3>
