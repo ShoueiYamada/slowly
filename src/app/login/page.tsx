@@ -147,7 +147,7 @@ function LoginContent() {
           </div>
 
           <p style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '14px', color: '#475569' }}>
-            {isSignUp ? c.switch_to_signup : c.switch_to_signin}{' '}
+            {isSignUp ? c.switch_to_signin : c.switch_to_signup}{' '}
             <button onClick={() => { setIsSignUp(!isSignUp); setMessage('') }}
               style={{ background: 'none', border: 'none', color: '#38BDF8', cursor: 'pointer', fontSize: '14px', fontWeight: '600', fontFamily: 'inherit' }}>
               {isSignUp ? c.switch_signin_link : c.switch_signup_link}

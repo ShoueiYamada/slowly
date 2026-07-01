@@ -259,16 +259,32 @@ export default function TaxReportPage() {
             <div style={{ fontSize: '13px', color: tokens.textSecondary, lineHeight: '1.8', background: tokens.bgHover, borderRadius: '8px', padding: '1rem' }}>
               {lang === 'ja' ? (
                 <>
+                  <p style={{ fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>📋 レポートについて</p>
                   <p>• 本レポートは{selectedYear}年1月1日〜12月31日の作業記録をもとに作成されています</p>
-                  <p>• 円換算レートは取得時点のレートを使用しています（実際の申告には確定申告時のレートをご確認ください）</p>
-                  <p>• 海外収入は雑所得として申告が必要な場合があります。税理士にご確認ください</p>
+                  <p>• 白色申告・青色申告どちらにも使える年間収入の集計データです</p>
+                  <p style={{ marginTop: '12px', fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>💱 為替レートについて</p>
+                  <p>• 表示レートはopen.er-api.comのリアルタイムレートです</p>
+                  <p>• 確定申告には国税庁が定めるTTMレート（取引日の仲値）での換算が原則です。実際の申告時には各取引日のTTMレートで再計算してください</p>
                   <p>• 為替差益が生じる場合は別途申告が必要になる場合があります</p>
+                  <p style={{ marginTop: '12px', fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>🧾 インボイス制度について</p>
+                  <p>• 現在、適格請求書（インボイス）の発行には対応していません（今後対応予定）</p>
+                  <p>• 海外事業者への請求書は消費税の課税対象外となる場合があります</p>
+                  <p style={{ marginTop: '12px', fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>⚠️ 免責事項</p>
+                  <p>• 本レポートは参考情報です。実際の申告には税理士・税務署にご確認ください</p>
+                  <p>• 海外収入は雑所得または事業所得として申告が必要です</p>
                 </>
               ) : (
                 <>
-                  <p>• This report covers work records from Jan 1 to Dec 31, {selectedYear}</p>
-                  <p>• Exchange rates used are approximate. Please verify with official rates for tax filing</p>
-                  <p>• Overseas income may need to be declared as miscellaneous income. Consult your accountant</p>
+                  <p style={{ fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>📋 About this report</p>
+                  <p>• Covers work records from Jan 1 to Dec 31, {selectedYear}</p>
+                  <p>• Works for both simplified and blue-form (青色申告) tax returns in Japan</p>
+                  <p style={{ marginTop: '12px', fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>💱 Exchange rates</p>
+                  <p>• Rates sourced from open.er-api.com (real-time)</p>
+                  <p>• For official Japanese tax filing, use the TTM rate (mid-market rate) on each transaction date as defined by the NTA</p>
+                  <p style={{ marginTop: '12px', fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>🧾 Invoice System (インボイス制度)</p>
+                  <p>• Qualified Invoice (適格請求書) issuance is not yet supported — coming soon</p>
+                  <p style={{ marginTop: '12px', fontWeight: '600', color: tokens.text, marginBottom: '8px' }}>⚠️ Disclaimer</p>
+                  <p>• This report is for reference only. Always consult a licensed accountant for official tax filing</p>
                 </>
               )}
             </div>
